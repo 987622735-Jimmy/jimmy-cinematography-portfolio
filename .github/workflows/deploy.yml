@@ -29,6 +29,7 @@ jobs:
         run: |
           cat .deploy/site-part-* > /tmp/jimmy-portfolio.tar.gz
           tar -xzf /tmp/jimmy-portfolio.tar.gz -C .
+          git checkout -- src/main.tsx src/data/projects.ts src/styles.css
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
         env:
