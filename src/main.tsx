@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { projectBySlug, projects, type Project, type ProjectVideo } from "./data/projects";
+import { categoryOptions, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
 import "./styles.css";
 
 const basePath = import.meta.env.BASE_URL;
@@ -63,8 +63,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow">{children}</p>;
 }
 
-function WorkGrid({ selected = false }: { selected?: boolean }) {
-  const items = selected ? projects.slice(0, 6) : projects;
+function WorkGrid({ items = projects }: { items?: Project[] }) {
   return (
     <div className="work-grid">
       {items.map((project, index) => (
@@ -85,9 +84,9 @@ function WorkGrid({ selected = false }: { selected?: boolean }) {
           <span className="work-card__copy">
             <strong>{project.title}</strong>
             <small lang="en">{project.titleEn}</small>
-            <em>{project.year} · {project.type} · {project.role}</em>
+            <em>{categoryOptions.find((option) => option.id === project.category)?.label} · {project.year} · {project.role}</em>
           </span>
-          <span className="work-card__action">查看图集 <i>{project.videos?.length ? `${project.videos.length} 部影片` : "View stills"}</i></span>
+          <span className="work-card__action">查看作品 <i>{project.videos?.length ? `${project.videos.length} 部影片` : "View stills"}</i></span>
         </a>
       ))}
     </div>
@@ -113,10 +112,11 @@ function Home() {
         />
         <div className="hero__shade" aria-hidden="true" />
         <div className="hero__content">
-          <Eyebrow>中国 · 深圳 / Shenzhen, China · 可承接商业影像项目</Eyebrow>
+          <Eyebrow>中国 · 深圳 / Shenzhen, China</Eyebrow>
           <h1>林键明</h1>
           <p className="hero__name" lang="en">JIMMY</p>
           <p className="hero__role">导演摄影师 <span>Director & Cinematographer</span></p>
+          <p className="hero__statement">擅长以光影、构图与镜头节奏，把产品功能转化为有情绪的视觉叙事。</p>
           <div className="hero__actions">
             <a className="text-link text-link--light" href={path("work/")}>
               浏览精选作品 <span aria-hidden="true">↘</span>
@@ -134,7 +134,7 @@ function Home() {
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
           <h2 id="selected-work">让产品进入<br />真实的情绪。</h2>
         </div>
-        <WorkGrid selected />
+        <WorkGrid items={projects.slice(0, 6)} />
         <a className="text-link section-link" href={path("work/")}>
           查看全部 {projects.length} 组作品 <span aria-hidden="true">↘</span>
         </a>
@@ -149,6 +149,11 @@ function Home() {
 }
 
 function Work() {
+  const [activeCategory, setActiveCategory] = useState<"all" | ProjectCategory>("all");
+  const visibleProjects = activeCategory === "all"
+    ? projects
+    : projects.filter((project) => project.category === activeCategory);
+
   useMetadata(
     "作品｜林键明 JIMMY",
     "林键明 JIMMY 的广告 TVC、产品影像、品牌短片与人物采访作品。",
@@ -158,10 +163,26 @@ function Work() {
       <section className="page-intro">
         <Eyebrow>01 — 作品 / Work</Eyebrow>
         <h1>从静帧开始，<br />进入完整画面。</h1>
-        <p>收录广告 TVC、产品影像、品牌短片与人物采访。点击任一静帧进入图集；匹配到视频的项目可直接播放本地网页影片。</p>
+        <p>按创作方向浏览作品。每个项目先以静帧呈现，进入详情页即可观看对应影片。</p>
       </section>
       <section className="section section--work section--work-page">
-        <WorkGrid />
+        <div className="category-filter" role="tablist" aria-label="作品分类">
+          {categoryOptions.map((category) => (
+            <button
+              className={activeCategory === category.id ? "is-active" : ""}
+              key={category.id}
+              type="button"
+              role="tab"
+              aria-selected={activeCategory === category.id}
+              onClick={() => setActiveCategory(category.id)}
+            >
+              <span>{category.label}</span>
+              <small lang="en">{category.labelEn}</small>
+            </button>
+          ))}
+        </div>
+        <p className="category-filter__count">{visibleProjects.length} 组作品 / {visibleProjects.length} projects</p>
+        <WorkGrid items={visibleProjects} />
       </section>
     </Layout>
   );
@@ -259,21 +280,10 @@ function ProjectPage({ project }: { project: Project }) {
           </div>
         </section>
 
-        <div className="project__information">
-          <div>
-            <Eyebrow>项目信息 / Credits</Eyebrow>
-            <p className="project__role">{project.role}</p>
-            <p className="project__client">客户：{project.client}</p>
-          </div>
-          <dl>
-            <div><dt>导演 <span>Director</span></dt><dd>{project.director}</dd></div>
-            <div><dt>摄影 <span>Cinematographer</span></dt><dd>{project.cinematographer}</dd></div>
-            <div><dt>制作公司 <span>Production</span></dt><dd>{project.production}</dd></div>
-            <div><dt>客户 <span>Client</span></dt><dd>{project.client}</dd></div>
-            <div><dt>摄影机 <span>Camera</span></dt><dd>{project.camera}</dd></div>
-            <div><dt>镜头 <span>Lenses</span></dt><dd>{project.lenses}</dd></div>
-            <div><dt>年份 <span>Year</span></dt><dd>{project.year}</dd></div>
-          </dl>
+        <div className="project__meta" aria-label="作品信息">
+          <div><span>分类 <i>Category</i></span><strong>{categoryOptions.find((option) => option.id === project.category)?.label}</strong></div>
+          <div><span>职务 <i>Role</i></span><strong>{project.role}</strong></div>
+          <div><span>年份 <i>Year</i></span><strong>{project.year}</strong></div>
         </div>
 
         <section className="project__stills" aria-label={`${project.title} 项目静帧`}>
