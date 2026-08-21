@@ -1,0 +1,50 @@
+name: Deploy portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Restore validated site source
+        run: |
+          cat .deploy/site-part-* > /tmp/jimmy-portfolio.tar.gz
+          tar -xzf /tmp/jimmy-portfolio.tar.gz -C .
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+        env:
+          PAGES_REPOSITORY: ${{ github.repository }}
+          PAGES_OWNER: ${{ github.repository_owner }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
