@@ -525,7 +525,7 @@ function Home() {
         </div>
         <div className="home-profile__body">
           <Eyebrow>个人经历 / Profile</Eyebrow>
-          <SplitText as="h2" id="profile-title" text="让每一个镜头\n都有明确的呼吸。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <SplitText as="h2" id="profile-title" text={"让每一个镜头\n都有明确的呼吸。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <p>林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于产品影像、品牌短片与人物内容，从前期策划、分镜到现场摄影，建立完整而高效的视觉工作流程。</p>
           <div className="home-profile__facts">
             <div><strong>8+</strong><span>年影像经验<br /><i>Years in image-making</i></span></div>
@@ -542,7 +542,7 @@ function Home() {
       <section className="section section--work home-selected" id="selected-projects" aria-labelledby="selected-work">
         <div className="section-heading">
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
-          <SplitText as="h2" id="selected-work" text="大画面，\n先于解释发生。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <SplitText as="h2" id="selected-work" text={"大画面，\n先于解释发生。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         </div>
         <WorkGrid items={projects.slice(0, 6)} />
         <a className="text-link section-link" href={path("work/")}>
@@ -553,7 +553,7 @@ function Home() {
       <section className="section home-capabilities" aria-labelledby="capabilities-title">
         <div className="section-heading">
           <Eyebrow>个人评价 / Capabilities</Eyebrow>
-          <SplitText as="h2" id="capabilities-title" text="我如何把想法\n变成画面。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <SplitText as="h2" id="capabilities-title" text={"我如何把想法\n变成画面。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         </div>
         <div className="capability-grid">
           {capabilityCards.map((card) => (
@@ -570,7 +570,7 @@ function Home() {
       <section className="home-contact" id="contact" aria-labelledby="home-contact-title">
         <div className="home-contact__inner">
           <Eyebrow>保持联系 / Contact</Eyebrow>
-          <SplitText as="h2" id="home-contact-title" text="从下一帧开始，\n保持联系。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <SplitText as="h2" id="home-contact-title" text={"从下一帧开始，\n保持联系。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <div className="home-contact__bottom">
             <div>
               <a href="mailto:987622735@qq.com">987622735@qq.com</a>
@@ -598,7 +598,7 @@ function Work() {
     <Layout>
       <section className="page-intro">
         <Eyebrow>01 — 作品 / Work</Eyebrow>
-        <SplitText as="h1" text="从静帧开始，\n进入完整画面。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <SplitText as="h1" text={"从静帧开始，\n进入完整画面。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <p>按创作方向浏览作品。每个项目先以静帧呈现，进入详情页即可观看对应影片。</p>
       </section>
       <section className="section section--work section--work-page">
@@ -812,7 +812,7 @@ function About() {
         </figure>
         <div>
           <Eyebrow>02 — 关于 / About</Eyebrow>
-          <SplitText as="h1" text="用画面，\n承载感受。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <SplitText as="h1" text={"用画面，\n承载感受。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <p className="about-hero__intro">林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于以光影、构图和镜头语言服务品牌叙事与产品表达，项目覆盖专业摄影器材配件、OPPO、农夫山泉、美的，以及 3C 数码与母婴电商产品等领域。</p>
           <p className="about-hero__intro about-hero__intro--secondary">熟悉 ARRI Alexa、RED 等数字电影摄影机与灯光设计；重视团队协作和现场效率，在技术与美学之间寻找恰当平衡。</p>
         </div>
@@ -866,7 +866,7 @@ function Contact() {
     <Layout>
       <section className="contact">
         <Eyebrow>03 — 联系 / Contact</Eyebrow>
-        <SplitText as="h1" text="保持联系，\n从画面开始。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <SplitText as="h1" text={"保持联系，\n从画面开始。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <div className="contact__links">
           <a href="mailto:987622735@qq.com"><span>邮箱 <i>Email</i></span>987622735@qq.com</a>
           <a href="tel:+8615918606378"><span>电话 <i>Phone</i></span>+86 159 1860 6378</a>
@@ -883,7 +883,7 @@ function NotFound() {
     <Layout>
       <section className="not-found">
         <Eyebrow>404</Eyebrow>
-        <SplitText as="h1" text="这个画面\n暂未收录。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <SplitText as="h1" text={"这个画面\n暂未收录。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <a className="text-link" href={path()}>返回首页 <span aria-hidden="true">↗</span></a>
       </section>
     </Layout>
