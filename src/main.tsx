@@ -489,10 +489,6 @@ function Contact() {
         <div className="contact__links">
           <a href="mailto:987622735@qq.com"><span>邮箱 <i>Email</i></span>987622735@qq.com</a>
           <a href="tel:+8615918606378"><span>电话 <i>Phone</i></span>+86 159 1860 6378</a>
-          <p><span>微信 <i>WeChat</i></span>请通过邮箱或电话联系</p>
-          <p><span>Instagram</span>公开账号待补充</p>
-          <p><span>Vimeo</span>公开账号待补充</p>
-          <p><span>小红书 <i>Xiaohongshu</i></span>公开账号待补充</p>
         </div>
         <p className="contact__note">常驻广东深圳，可通过邮箱获取完整简历与作品资料。<br /><span lang="en">Based in Shenzhen, China.</span></p>
       </section>
