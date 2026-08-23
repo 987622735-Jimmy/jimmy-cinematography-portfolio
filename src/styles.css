@@ -218,17 +218,21 @@ button, input { font: inherit; }
 
 /* Deep green portfolio foundation — restrained, editorial, and built for large screens. */
 :root {
-  --bg: #07150f;
-  --surface: #0b2118;
-  --surface-strong: #102c21;
-  --line: #244839;
+  --bg: #061a12;
+  --surface: #0b2b20;
+  --surface-strong: #123f2d;
+  --line: #2a5442;
   --text: #f2f4ec;
   --muted: #9eafa5;
   --yellow: #e4c45b;
   --yellow-soft: #c8b467;
+  --red: #672c2c;
+  --font-display: "Avenir Next", "SF Pro Display", "Helvetica Neue", "PingFang SC", sans-serif;
+  --font-body: "Avenir Next", "Helvetica Neue", "PingFang SC", sans-serif;
 }
 
-html, body { background: var(--bg); color: var(--text); }
+html, body { background: var(--bg); color: var(--text); font-family: var(--font-body); }
+h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: var(--font-display); }
 ::selection { background: var(--yellow); color: var(--bg); }
 .site-header { z-index: 20; right: max(1.25rem, calc((100vw - 1700px) / 2)); left: max(1.25rem, calc((100vw - 1700px) / 2)); width: auto; padding-right: 0; padding-left: 0; mix-blend-mode: normal; color: var(--text); }
 .site-header__right { display: flex; align-items: center; gap: 1.35rem; }
@@ -238,6 +242,9 @@ html, body { background: var(--bg); color: var(--text); }
 .header-cta { display: inline-flex; align-items: baseline; gap: .45rem; border: 1px solid var(--yellow); padding: .55rem .8rem; color: var(--yellow); font-family: "SFMono-Regular", Consolas, monospace; font-size: .62rem; letter-spacing: .04em; transition: background .25s ease, color .25s ease; }
 .header-cta:hover { background: var(--yellow); color: var(--bg); }
 .header-cta i { color: currentColor; font-size: .52rem; font-style: normal; opacity: .72; }
+.site-header--floating { position: fixed; top: 1rem; right: max(1rem, calc((100vw - 1700px) / 2)); left: max(1rem, calc((100vw - 1700px) / 2)); border: 1px solid rgb(228 196 91 / .24); border-radius: .18rem; padding: .72rem .9rem; background: rgb(6 26 18 / .68); box-shadow: 0 1rem 3rem rgb(0 0 0 / .22); backdrop-filter: blur(18px) saturate(135%); -webkit-backdrop-filter: blur(18px) saturate(135%); animation: header-float-in .35s ease both; }
+.site-header--floating .wordmark small { color: var(--muted); }
+.site-header--floating .header-cta { padding: .45rem .65rem; }
 .site-footer { border-color: var(--line); width: min(calc(100% - 2.5rem), 1700px); margin-right: auto; margin-left: auto; color: var(--muted); }
 
 .hero { min-height: 100svh; background: var(--bg); }
@@ -256,6 +263,9 @@ html, body { background: var(--bg); color: var(--text); }
 .hero__button { display: inline-flex; align-items: baseline; gap: .6rem; border: 1px solid var(--yellow); padding: .75rem 1rem; color: var(--yellow); font-family: "SFMono-Regular", Consolas, monospace; font-size: .68rem; letter-spacing: .04em; transition: background .25s ease, color .25s ease; }
 .hero__button span { color: currentColor; font-size: .56rem; opacity: .72; }
 .hero__button:hover { background: var(--yellow); color: var(--bg); }
+.hero__button--dark:hover { border-color: var(--red); background: var(--red); color: var(--text); }
+.text-link:hover { border-color: var(--yellow); color: var(--yellow); }
+.work-card:hover .work-card__action, .work-card:focus-visible .work-card__action { color: var(--yellow); }
 
 .section, .page-intro, .project, .about-section, .contact { max-width: 1700px; margin-right: auto; margin-left: auto; }
 .section { border-top: 1px solid var(--line); }
@@ -303,7 +313,7 @@ html, body { background: var(--bg); color: var(--text); }
 .home-contact__bottom > div { display: grid; gap: .35rem; }
 .home-contact__bottom a:not(.hero__button) { color: var(--bg); font-size: clamp(.95rem, 1.5vw, 1.2rem); }
 .hero__button--dark { border-color: var(--bg); background: var(--bg); color: var(--yellow); }
-.hero__button--dark:hover { border-color: var(--surface-strong); background: var(--surface-strong); color: var(--yellow); }
+  .hero__button--dark:hover { border-color: var(--red); background: var(--red); color: var(--text); }
 
 @media (min-width: 720px) {
   .site-header { padding-top: 2rem; }
@@ -331,3 +341,5 @@ html, body { background: var(--bg); color: var(--text); }
   .home-profile__facts span { font-size: .63rem; }
   .home-contact__bottom { display: grid; align-items: start; }
 }
+
+@keyframes header-float-in { from { transform: translateY(-.75rem); opacity: .4; } to { transform: translateY(0); opacity: 1; } }
