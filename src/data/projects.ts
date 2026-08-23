@@ -81,6 +81,7 @@ export const projects: Project[] = [
     cinematographer: "—",
     camera: "—",
     lenses: "—",
+    videoUrl: "https://www.amazon.com/live/video/01d57f5f905543fa885c74d69a686c58?ref_=cm_sw_cp_r_ib_dt_XxvTVRvnK0rSB",
   },
   {
     slug: "asus-loctek",
