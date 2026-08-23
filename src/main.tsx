@@ -275,6 +275,21 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
     );
   }
 
+  if (source.startsWith("https://www.amazon.com/live/")) {
+    return (
+      <a
+        className="project-video project-video--poster project-video--external"
+        href={source}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`在 Amazon Live 播放 ${title}`}
+      >
+        <img src={poster} alt={`${project.title} 视频封面`} />
+        <span>在 Amazon Live 播放 <i>Open video ↗</i></span>
+      </a>
+    );
+  }
+
   if (playing) {
     if (source.startsWith("videos/")) {
       return (
