@@ -99,6 +99,8 @@ button, input { font: inherit; }
 .project-video--poster span { position: relative; z-index: 1; border-bottom: 1px solid currentColor; padding-bottom: .4rem; font-family: "SFMono-Regular", Consolas, monospace; font-size: .64rem; letter-spacing: .06em; }
 .project-video--poster i { margin-left: .35rem; color: #deddd8; font-style: normal; font-size: .86em; }
 .project-video--poster:hover img { transform: scale(1.035); filter: brightness(.4) saturate(.9); }
+.project-video--external span { border-color: var(--yellow); color: var(--yellow); }
+.project-video--external i { color: var(--yellow-soft); }
 .project-video--local { overflow: hidden; }
 .project-video--local video { display: block; width: 100%; height: 100%; object-fit: contain; background: #090909; }
 .project-video__caption { margin: .65rem 0 0; color: #aaa8a1; font-size: .75rem; }
