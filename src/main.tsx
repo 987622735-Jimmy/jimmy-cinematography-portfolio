@@ -105,8 +105,8 @@ function WorkGrid({ items = projects }: { items?: Project[] }) {
 }
 
 const capabilityCards = [
-  { index: "01", title: "电影摄影", titleEn: "Cinematic Lighting", text: "用光线、材质和镜头运动建立有情绪的视觉秩序。" },
-  { index: "02", title: "产品叙事", titleEn: "Product Storytelling", text: "把复杂功能转译成清晰、克制、具有记忆点的画面。" },
+  { index: "01", title: "影视摄影", titleEn: "Cinematic Lighting", text: "用人物、场景、光线、和镜头运动建立有情绪的视觉秩序。" },
+  { index: "02", title: "产品叙事", titleEn: "Product Storytelling", text: "把复杂功能转译成清晰、张扬、具有记忆点的画面。" },
   { index: "03", title: "现场执行", titleEn: "On-set Direction", text: "从前期分镜到现场调度，保持节奏、质量与团队协作。" },
 ];
 
