@@ -29,11 +29,13 @@ function Header() {
         <span>林键明 <b>JIMMY</b></span>
         <small>导演摄影师 / Director & Cinematographer</small>
       </a>
-      <nav aria-label="主导航">
-        <a href={path("work/")}>作品 <i>Work</i></a>
-        <a href={path("about/")}>关于 <i>About</i></a>
-        <a href={path("contact/")}>联系 <i>Contact</i></a>
-      </nav>
+      <div className="site-header__right">
+        <nav aria-label="主导航">
+          <a href={path("work/")}>作品 <i>Work</i></a>
+          <a href={path("about/")}>经历 <i>About</i></a>
+        </nav>
+        <a className="header-cta" href={path("contact/")}>联系我 <i>Contact</i></a>
+      </div>
     </header>
   );
 }
@@ -93,31 +95,42 @@ function WorkGrid({ items = projects }: { items?: Project[] }) {
   );
 }
 
+const capabilityCards = [
+  { index: "01", title: "电影摄影", titleEn: "Cinematic Lighting", text: "用光线、材质和镜头运动建立有情绪的视觉秩序。" },
+  { index: "02", title: "产品叙事", titleEn: "Product Storytelling", text: "把复杂功能转译成清晰、克制、具有记忆点的画面。" },
+  { index: "03", title: "现场执行", titleEn: "On-set Direction", text: "从前期分镜到现场调度，保持节奏、质量与团队协作。" },
+];
+
 function Home() {
   useMetadata(
     "林键明 JIMMY｜导演摄影师作品集",
-    "林键明 JIMMY，深圳导演摄影师。专注广告 TVC、产品影像与品牌短片。",
+    "林键明 JIMMY，深圳导演摄影师。以光影、构图与镜头节奏完成广告、产品与人物影像。",
   );
 
   return (
     <Layout>
       <section className="hero">
-        <img
-          className="hero__image"
-          src={asset("hero-on-set.jpg")}
-          alt="林键明在商业拍摄现场工作"
-          fetchPriority="high"
-          decoding="async"
-          sizes="100vw"
-        />
+        <video
+          className="hero__video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={asset("hero-on-set.jpg")}
+          aria-hidden="true"
+        >
+          <source src={path("videos/smallrig-level-up.mp4")} type="video/mp4" />
+        </video>
         <div className="hero__shade" aria-hidden="true" />
+        <div className="hero__grid" aria-hidden="true" />
         <div className="hero__content">
-          <Eyebrow>中国 · 深圳 / Shenzhen, China</Eyebrow>
+          <Eyebrow>导演摄影师 / Director & Cinematographer · 深圳 Shenzhen</Eyebrow>
           <h1>林键明</h1>
           <p className="hero__name" lang="en">JIMMY</p>
           <p className="hero__role">导演摄影师 <span>Director & Cinematographer</span></p>
           <p className="hero__statement">擅长以光影、构图与镜头节奏，把产品功能转化为有情绪的视觉叙事。</p>
           <div className="hero__actions">
+            <a className="hero__button" href={path("contact/")}>联系我 <span>Contact</span></a>
             <a className="text-link text-link--light" href={path("work/")}>
               浏览精选作品 <span aria-hidden="true">↘</span>
             </a>
@@ -129,10 +142,31 @@ function Home() {
         <p className="hero__index" aria-hidden="true">01 — {String(projects.length).padStart(2, "0")}</p>
       </section>
 
-      <section className="section section--work" aria-labelledby="selected-work">
+      <section className="section home-profile" id="profile" aria-labelledby="profile-title">
+        <div className="home-profile__visual">
+          <img src={asset("on-set.jpg")} alt="林键明在拍摄现场" loading="lazy" decoding="async" />
+          <span>Profile / 02</span>
+        </div>
+        <div className="home-profile__body">
+          <Eyebrow>个人经历 / Profile</Eyebrow>
+          <h2 id="profile-title">让每一个镜头<br />都有明确的呼吸。</h2>
+          <p>林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于产品影像、品牌短片与人物内容，从前期策划、分镜到现场摄影，建立完整而高效的视觉工作流程。</p>
+          <div className="home-profile__facts">
+            <div><strong>8+</strong><span>年影像经验<br /><i>Years in image-making</i></span></div>
+            <div><strong>深圳</strong><span>常驻城市<br /><i>Based in Shenzhen</i></span></div>
+          </div>
+          <div className="profile-contact">
+            <a href="mailto:987622735@qq.com">987622735@qq.com <span>Email ↗</span></a>
+            <a href="tel:+8615918606378">+86 159 1860 6378 <span>Phone ↗</span></a>
+          </div>
+          <a className="text-link" href={path("about/")}>查看完整经历 <span aria-hidden="true">↘</span></a>
+        </div>
+      </section>
+
+      <section className="section section--work home-selected" id="selected-projects" aria-labelledby="selected-work">
         <div className="section-heading">
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
-          <h2 id="selected-work">让产品进入<br />真实的情绪。</h2>
+          <h2 id="selected-work">大画面，<br />先于解释发生。</h2>
         </div>
         <WorkGrid items={projects.slice(0, 6)} />
         <a className="text-link section-link" href={path("work/")}>
@@ -140,9 +174,35 @@ function Home() {
         </a>
       </section>
 
-      <section className="statement" aria-label="创作理念">
-        <p>以光影、构图与镜头语言，服务故事、品牌与产品。</p>
-        <span lang="en">Light, texture, motion.</span>
+      <section className="section home-capabilities" aria-labelledby="capabilities-title">
+        <div className="section-heading">
+          <Eyebrow>个人评价 / Capabilities</Eyebrow>
+          <h2 id="capabilities-title">我如何把想法<br />变成画面。</h2>
+        </div>
+        <div className="capability-grid">
+          {capabilityCards.map((card) => (
+            <article className="capability-card" key={card.index}>
+              <span className="capability-card__index">{card.index}</span>
+              <h3>{card.title}</h3>
+              <small lang="en">{card.titleEn}</small>
+              <p>{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-contact" id="contact" aria-labelledby="home-contact-title">
+        <div className="home-contact__inner">
+          <Eyebrow>保持联系 / Contact</Eyebrow>
+          <h2 id="home-contact-title">从下一帧开始，<br />保持联系。</h2>
+          <div className="home-contact__bottom">
+            <div>
+              <a href="mailto:987622735@qq.com">987622735@qq.com</a>
+              <a href="tel:+8615918606378">+86 159 1860 6378</a>
+            </div>
+            <a className="hero__button hero__button--dark" href={path("contact/")}>进入联系页 <span>Contact</span></a>
+          </div>
+        </div>
       </section>
     </Layout>
   );
