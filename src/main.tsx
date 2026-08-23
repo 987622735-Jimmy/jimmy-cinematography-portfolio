@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createRoot } from "react-dom/client";
 import { categoryOptions, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
 import "./styles.css";
@@ -72,6 +72,110 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow">{children}</p>;
+}
+
+type SplitTextProps = {
+  text: string;
+  as?: "span" | "h1" | "h2" | "h3" | "p";
+  id?: string;
+  className?: string;
+  delay?: number;
+  duration?: number;
+  ease?: string;
+  splitType?: "chars" | "words";
+  from?: { opacity?: number; y?: number };
+  to?: { opacity?: number; y?: number };
+  threshold?: number;
+  rootMargin?: string;
+  textAlign?: CSSProperties["textAlign"];
+  onLetterAnimationComplete?: () => void;
+  showCallback?: boolean;
+};
+
+function SplitText({
+  text,
+  as = "span",
+  id,
+  className = "",
+  delay = 90,
+  duration = 1.25,
+  ease = "power3.out",
+  splitType = "chars",
+  from = { opacity: 0, y: 40 },
+  to = { opacity: 1, y: 0 },
+  threshold = 0.1,
+  rootMargin = "-100px",
+  textAlign,
+  onLetterAnimationComplete,
+  showCallback = true,
+}: SplitTextProps) {
+  const textRef = useRef<HTMLElement | null>(null);
+  const [visible, setVisible] = useState(false);
+  const parts = splitType === "words" ? text.split(/(\s+)/) : Array.from(text);
+  const easing = ease === "linear" ? "linear" : "cubic-bezier(.22, 1, .36, 1)";
+
+  useEffect(() => {
+    const node = textRef.current;
+    if (!node) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold, rootMargin });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [rootMargin, threshold]);
+
+  useEffect(() => {
+    if (!visible || !onLetterAnimationComplete || !showCallback) return undefined;
+    const timeout = window.setTimeout(
+      onLetterAnimationComplete,
+      Math.max(0, (parts.length - 1) * delay + duration * 1000),
+    );
+    return () => window.clearTimeout(timeout);
+  }, [delay, duration, onLetterAnimationComplete, parts.length, showCallback, visible]);
+
+  const style = {
+    "--split-text-align": textAlign,
+    "--split-duration": `${duration}s`,
+    "--split-delay": `${delay}ms`,
+    "--split-from-opacity": from.opacity ?? 0,
+    "--split-to-opacity": to.opacity ?? 1,
+    "--split-y": `${from.y ?? 40}px`,
+    "--split-ease": easing,
+  } as CSSProperties;
+  const Tag = as;
+
+  return (
+    <Tag
+      ref={(node) => { textRef.current = node; }}
+      id={id}
+      className={`split-text${visible ? " is-visible" : ""}${className ? ` ${className}` : ""}`}
+      style={style}
+      aria-label={text}
+    >
+      {parts.map((part, index) => {
+        if (part === "\n") return <br key={`line-${index}`} />;
+        const content = part.trim() === "" ? part.replace(/ /g, "\u00a0") : part;
+        return (
+          <span
+            className={`split-text__char${part.trim() === "" ? " split-text__space" : ""}`}
+            key={`${part}-${index}`}
+            style={{ "--split-index": index } as CSSProperties}
+            aria-hidden="true"
+          >
+            {content}
+          </span>
+        );
+      })}
+    </Tag>
+  );
 }
 
 type ColorBendsProps = {
@@ -284,7 +388,7 @@ function Home() {
         <div className="hero__grid" aria-hidden="true" />
         <div className="hero__content">
           <Eyebrow>导演摄影师 / Director & Cinematographer · 深圳 Shenzhen</Eyebrow>
-          <h1>林键明</h1>
+          <SplitText as="h1" text="林键明" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <p className="hero__name" lang="en">JIMMY</p>
           <p className="hero__role">导演摄影师 <span>Director & Cinematographer</span></p>
           <p className="hero__statement">擅长以光影、构图与镜头节奏，把产品功能转化为有情绪的视觉叙事。</p>
@@ -324,7 +428,7 @@ function Home() {
         </div>
         <div className="home-profile__body">
           <Eyebrow>个人经历 / Profile</Eyebrow>
-          <h2 id="profile-title">让每一个镜头<br />都有明确的呼吸。</h2>
+          <SplitText as="h2" id="profile-title" text="让每一个镜头\n都有明确的呼吸。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <p>林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于产品影像、品牌短片与人物内容，从前期策划、分镜到现场摄影，建立完整而高效的视觉工作流程。</p>
           <div className="home-profile__facts">
             <div><strong>8+</strong><span>年影像经验<br /><i>Years in image-making</i></span></div>
@@ -341,7 +445,7 @@ function Home() {
       <section className="section section--work home-selected" id="selected-projects" aria-labelledby="selected-work">
         <div className="section-heading">
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
-          <h2 id="selected-work">大画面，<br />先于解释发生。</h2>
+          <SplitText as="h2" id="selected-work" text="大画面，\n先于解释发生。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         </div>
         <WorkGrid items={projects.slice(0, 6)} />
         <a className="text-link section-link" href={path("work/")}>
@@ -352,13 +456,13 @@ function Home() {
       <section className="section home-capabilities" aria-labelledby="capabilities-title">
         <div className="section-heading">
           <Eyebrow>个人评价 / Capabilities</Eyebrow>
-          <h2 id="capabilities-title">我如何把想法<br />变成画面。</h2>
+          <SplitText as="h2" id="capabilities-title" text="我如何把想法\n变成画面。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         </div>
         <div className="capability-grid">
           {capabilityCards.map((card) => (
             <article className="capability-card" key={card.index}>
               <span className="capability-card__index">{card.index}</span>
-              <h3>{card.title}</h3>
+              <SplitText as="h3" text={card.title} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
               <small lang="en">{card.titleEn}</small>
               <p>{card.text}</p>
             </article>
@@ -369,7 +473,7 @@ function Home() {
       <section className="home-contact" id="contact" aria-labelledby="home-contact-title">
         <div className="home-contact__inner">
           <Eyebrow>保持联系 / Contact</Eyebrow>
-          <h2 id="home-contact-title">从下一帧开始，<br />保持联系。</h2>
+          <SplitText as="h2" id="home-contact-title" text="从下一帧开始，\n保持联系。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <div className="home-contact__bottom">
             <div>
               <a href="mailto:987622735@qq.com">987622735@qq.com</a>
@@ -397,7 +501,7 @@ function Work() {
     <Layout>
       <section className="page-intro">
         <Eyebrow>01 — 作品 / Work</Eyebrow>
-        <h1>从静帧开始，<br />进入完整画面。</h1>
+        <SplitText as="h1" text="从静帧开始，\n进入完整画面。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <p>按创作方向浏览作品。每个项目先以静帧呈现，进入详情页即可观看对应影片。</p>
       </section>
       <section className="section section--work section--work-page">
@@ -503,7 +607,7 @@ function ProjectPage({ project }: { project: Project }) {
         <div className="project__heading">
           <a className="back-link" href={path("work/")}><span aria-hidden="true">←</span> 返回作品列表</a>
           <Eyebrow>{project.year} · {project.type}</Eyebrow>
-          <h1>{project.title}</h1>
+          <SplitText as="h1" text={project.title} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <p className="project__title-en" lang="en">{project.titleEn}</p>
           <p>{project.description}</p>
         </div>
@@ -611,7 +715,7 @@ function About() {
         </figure>
         <div>
           <Eyebrow>02 — 关于 / About</Eyebrow>
-          <h1>用画面，<br />承载感受。</h1>
+          <SplitText as="h1" text="用画面，\n承载感受。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
           <p className="about-hero__intro">林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于以光影、构图和镜头语言服务品牌叙事与产品表达，项目覆盖专业摄影器材配件、OPPO、农夫山泉、美的，以及 3C 数码与母婴电商产品等领域。</p>
           <p className="about-hero__intro about-hero__intro--secondary">熟悉 ARRI Alexa、RED 等数字电影摄影机与灯光设计；重视团队协作和现场效率，在技术与美学之间寻找恰当平衡。</p>
         </div>
@@ -624,7 +728,7 @@ function About() {
             <article key={`${item.time}-${item.company}`}>
               <p>{item.time}</p>
               <div>
-                <h2>{item.title}</h2>
+                <SplitText as="h2" text={item.title} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
                 <p>{item.company}</p>
                 <ul>{item.items.map((detail) => <li key={detail}>{detail}</li>)}</ul>
               </div>
@@ -665,7 +769,7 @@ function Contact() {
     <Layout>
       <section className="contact">
         <Eyebrow>03 — 联系 / Contact</Eyebrow>
-        <h1>保持联系，<br />从画面开始。</h1>
+        <SplitText as="h1" text="保持联系，\n从画面开始。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <div className="contact__links">
           <a href="mailto:987622735@qq.com"><span>邮箱 <i>Email</i></span>987622735@qq.com</a>
           <a href="tel:+8615918606378"><span>电话 <i>Phone</i></span>+86 159 1860 6378</a>
@@ -682,7 +786,7 @@ function NotFound() {
     <Layout>
       <section className="not-found">
         <Eyebrow>404</Eyebrow>
-        <h1>这个画面<br />暂未收录。</h1>
+        <SplitText as="h1" text="这个画面\n暂未收录。" delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <a className="text-link" href={path()}>返回首页 <span aria-hidden="true">↗</span></a>
       </section>
     </Layout>
