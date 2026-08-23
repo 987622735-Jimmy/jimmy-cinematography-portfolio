@@ -326,6 +326,7 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 
 @media (min-width: 1100px) {
   .site-header { padding-top: 2.25rem; }
+  .capability-grid { grid-template-columns: repeat(4, 1fr); }
   .home-contact__inner { padding-top: 10rem; padding-bottom: 10rem; }
 }
 
