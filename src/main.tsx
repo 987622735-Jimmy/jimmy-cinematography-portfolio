@@ -23,8 +23,17 @@ function useMetadata(title: string, description: string) {
 }
 
 function Header() {
+  const [floating, setFloating] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setFloating(window.scrollY > Math.max(window.innerHeight * .82, 520));
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="site-header">
+    <header className={`site-header${floating ? " site-header--floating" : ""}`}>
       <a className="wordmark" href={path()} aria-label="林键明 JIMMY 首页">
         <span>林键明 <b>JIMMY</b></span>
         <small>导演摄影师 / Director & Cinematographer</small>
