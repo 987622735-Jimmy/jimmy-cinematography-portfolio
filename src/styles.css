@@ -328,6 +328,7 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 .capability-card { min-height: 15rem; border-bottom: 1px solid var(--line); padding: 1.25rem 0 2.5rem; background: transparent; }
 .capability-card__index { color: var(--yellow); font-family: "SFMono-Regular", Consolas, monospace; font-size: .62rem; }
 .capability-card h3 { margin: 3.5rem 0 .35rem; color: var(--text); font-size: clamp(1.35rem, 2.2vw, 2.1rem); font-weight: 500; letter-spacing: -.045em; }
+.capability-card h3.split-text { display: block; }
 .capability-card small { color: var(--yellow-soft); font-family: "SFMono-Regular", Consolas, monospace; font-size: .56rem; letter-spacing: .04em; }
 .capability-card p { max-width: 20rem; margin: 1.2rem 0 0; color: var(--muted); font-size: .86rem; line-height: 1.7; }
 
