@@ -108,6 +108,7 @@ const capabilityCards = [
   { index: "01", title: "影视摄影", titleEn: "Cinematic Lighting", text: "用人物、场景、光线、和镜头运动建立有情绪的视觉秩序。" },
   { index: "02", title: "产品叙事", titleEn: "Product Storytelling", text: "把复杂功能转译成清晰、张扬、具有记忆点的画面。" },
   { index: "03", title: "现场执行", titleEn: "On-set Direction", text: "从前期分镜到现场调度，保持节奏、质量与团队协作。" },
+  { index: "04", title: "制片统筹", titleEn: "Production Management", text: "负责项目立项与 Brief 对接，统筹预算、质量与制作节奏；组建摄制团队，推进场地与模特协调，衔接后期剪辑、TC 审核与最终交片。" },
 ];
 
 function Home() {
