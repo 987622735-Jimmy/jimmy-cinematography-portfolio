@@ -281,7 +281,11 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 .category-filter button:hover, .category-filter button.is-active { border-color: var(--yellow); color: var(--yellow); }
 .category-filter__count { color: var(--muted); }
 
-.home-profile { display: grid; gap: 2.5rem; padding-top: clamp(5rem, 10vw, 10rem); padding-bottom: clamp(5rem, 10vw, 10rem); }
+.home-profile { position: relative; isolation: isolate; display: grid; gap: 2.5rem; overflow: hidden; padding-top: clamp(5rem, 10vw, 10rem); padding-bottom: clamp(5rem, 10vw, 10rem); }
+.home-profile > :not(.home-profile__bends) { position: relative; z-index: 1; }
+.home-profile__bends { position: absolute; z-index: 0; inset: 0; overflow: hidden; opacity: .52; pointer-events: none; }
+.color-bends { display: block; width: 100%; height: 100%; }
+.home-profile__bends-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(6 26 18 / .92) 0%, rgb(6 26 18 / .68) 48%, rgb(6 26 18 / .9) 100%); }
 .home-profile__visual { position: relative; align-self: start; }
 .home-profile__visual img { aspect-ratio: 4 / 5; object-fit: cover; filter: saturate(.7) contrast(1.08); }
 .home-profile__visual span { position: absolute; right: 1rem; bottom: 1rem; color: var(--yellow); font-family: "SFMono-Regular", Consolas, monospace; font-size: .58rem; letter-spacing: .06em; }
