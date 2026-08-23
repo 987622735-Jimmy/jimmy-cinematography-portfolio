@@ -22,6 +22,85 @@ function useMetadata(title: string, description: string) {
   }, [description, title]);
 }
 
+type PillNavItem = {
+  label: string;
+  labelEn?: string;
+  href: string;
+};
+
+type PillNavProps = {
+  logo?: React.ReactNode;
+  logoAlt?: string;
+  logoHref?: string;
+  items: PillNavItem[];
+  activeHref?: string;
+  className?: string;
+  ease?: string;
+  baseColor?: string;
+  pillColor?: string;
+  hoveredPillTextColor?: string;
+  pillTextColor?: string;
+  theme?: "color" | "dark" | "light";
+  initialLoadAnimation?: boolean;
+};
+
+function PillNav({
+  logo,
+  logoAlt = "首页",
+  logoHref = path(),
+  items,
+  activeHref,
+  className = "",
+  ease = "power2.easeOut",
+  baseColor = "#061a12",
+  pillColor = "#e4c45b",
+  hoveredPillTextColor = "#061a12",
+  pillTextColor = "#f2f4ec",
+  theme = "color",
+  initialLoadAnimation = false,
+}: PillNavProps) {
+  const style = {
+    "--pill-base": baseColor,
+    "--pill-fill": pillColor,
+    "--pill-hover-text": hoveredPillTextColor,
+    "--pill-text": pillTextColor,
+    "--pill-ease": ease === "linear" ? "linear" : "cubic-bezier(.22, 1, .36, 1)",
+  } as CSSProperties;
+
+  return (
+    <nav
+      className={`pill-nav pill-nav--${theme}${initialLoadAnimation ? " pill-nav--enter" : ""}${className ? ` ${className}` : ""}`}
+      style={style}
+      aria-label="主导航"
+    >
+      <a className="pill-nav__brand" href={logoHref} aria-label={logoAlt}>
+        {logo ?? (
+          <>
+            <span>林键明 <b>JIMMY</b></span>
+            <small>导演摄影师 / Director & Cinematographer</small>
+          </>
+        )}
+      </a>
+      <div className="pill-nav__items">
+        {items.map((item) => {
+          const isActive = item.href === activeHref;
+          return (
+            <a
+              className={`pill-nav__pill${isActive ? " is-active" : ""}${item.label === "联系我" ? " pill-nav__pill--contact" : ""}`}
+              href={item.href}
+              key={item.href}
+              aria-current={isActive ? "page" : undefined}
+            >
+              <span>{item.label}</span>
+              {item.labelEn && <small lang="en">{item.labelEn}</small>}
+            </a>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
 function Header() {
   const [floating, setFloating] = useState(false);
 
@@ -32,19 +111,37 @@ function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const currentPath = getCurrentPath();
+  const activeHref = currentPath === "/"
+    ? path()
+    : currentPath.startsWith("/work")
+      ? path("work/")
+      : currentPath.startsWith("/about")
+        ? path("about/")
+        : currentPath.startsWith("/contact")
+          ? path("contact/")
+          : undefined;
+
   return (
     <header className={`site-header${floating ? " site-header--floating" : ""}`}>
-      <a className="wordmark" href={path()} aria-label="林键明 JIMMY 首页">
-        <span>林键明 <b>JIMMY</b></span>
-        <small>导演摄影师 / Director & Cinematographer</small>
-      </a>
-      <div className="site-header__right">
-        <nav aria-label="主导航">
-          <a href={path("work/")}>作品 <i>Work</i></a>
-          <a href={path("about/")}>经历 <i>About</i></a>
-        </nav>
-        <a className="header-cta" href={path("contact/")}>联系我 <i>Contact</i></a>
-      </div>
+      <PillNav
+        logoAlt="林键明 JIMMY 首页"
+        items={[
+          { label: "首页", labelEn: "Home", href: path() },
+          { label: "作品", labelEn: "Work", href: path("work/") },
+          { label: "经历", labelEn: "About", href: path("about/") },
+          { label: "联系我", labelEn: "Contact", href: path("contact/") },
+        ]}
+        activeHref={activeHref}
+        className="site-pill-nav"
+        ease="power2.easeOut"
+        baseColor="#061a12"
+        pillColor="#e4c45b"
+        hoveredPillTextColor="#061a12"
+        pillTextColor="#f2f4ec"
+        theme="color"
+        initialLoadAnimation={false}
+      />
     </header>
   );
 }
