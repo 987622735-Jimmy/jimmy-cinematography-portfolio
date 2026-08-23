@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { categoryOptions, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
 import "./styles.css";
@@ -72,6 +72,155 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow">{children}</p>;
+}
+
+type ColorBendsProps = {
+  rotation?: number;
+  speed?: number;
+  colors?: string[];
+  transparent?: boolean;
+  autoRotate?: number;
+  scale?: number;
+  frequency?: number;
+  warpStrength?: number;
+  mouseInfluence?: number;
+  parallax?: number;
+  noise?: number;
+};
+
+function colorWithAlpha(color: string, alpha: number) {
+  const value = color.replace("#", "");
+  const hex = value.length === 3
+    ? value.split("").map((part) => `${part}${part}`).join("")
+    : value;
+  const red = Number.parseInt(hex.slice(0, 2), 16);
+  const green = Number.parseInt(hex.slice(2, 4), 16);
+  const blue = Number.parseInt(hex.slice(4, 6), 16);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function ColorBends({
+  rotation = 75,
+  speed = 0.15,
+  colors = ["#7cff67", "#d58400", "#b51a00"],
+  transparent = true,
+  autoRotate = 1,
+  scale = 2,
+  frequency = 1,
+  warpStrength = 1,
+  mouseInfluence = 0.7,
+  parallax = 0.6,
+  noise = 0.15,
+}: ColorBendsProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+    const context = canvas.getContext("2d");
+    if (!context) return undefined;
+
+    let frame = 0;
+    let elapsed = 0;
+    let lastTime = performance.now();
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
+    const pointer = { x: 0.5, y: 0.5 };
+
+    const resize = () => {
+      const bounds = canvas.getBoundingClientRect();
+      width = Math.max(1, bounds.width);
+      height = Math.max(1, bounds.height);
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    };
+
+    const updatePointer = (event: PointerEvent) => {
+      pointer.x = event.clientX / Math.max(window.innerWidth, 1);
+      pointer.y = event.clientY / Math.max(window.innerHeight, 1);
+    };
+
+    const draw = (time: number) => {
+      const delta = Math.min(time - lastTime, 40);
+      lastTime = time;
+      elapsed += delta * 0.001 * speed;
+      context.clearRect(0, 0, width, height);
+      if (!transparent) {
+        context.fillStyle = "#061a12";
+        context.fillRect(0, 0, width, height);
+      }
+
+      const pointerX = (pointer.x - 0.5) * mouseInfluence * width * 0.16;
+      const pointerY = (pointer.y - 0.5) * mouseInfluence * height * 0.16;
+      const bendScale = Math.max(0.58, 0.72 + (scale - 1) * 0.16);
+      const centerX = width / 2 + pointerX * parallax;
+      const centerY = height / 2 + pointerY * parallax;
+
+      context.save();
+      context.translate(centerX, centerY);
+      context.rotate((rotation * Math.PI) / 180 + elapsed * autoRotate * 0.1);
+      context.scale(bendScale, bendScale);
+      context.globalCompositeOperation = "screen";
+      context.lineCap = "round";
+
+      colors.forEach((color, index) => {
+        const offset = index - (colors.length - 1) / 2;
+        const phase = elapsed * (0.75 + index * 0.16) + index * 1.9;
+        const ribbonWidth = Math.max(34, height * (0.13 + noise * 0.08));
+        const startY = offset * height * 0.3;
+        const drawRibbon = (phaseOffset: number, alpha: number, blur: number) => {
+          context.save();
+          context.filter = `blur(${blur}px)`;
+          context.strokeStyle = colorWithAlpha(color, alpha);
+          context.lineWidth = ribbonWidth;
+          context.beginPath();
+          for (let step = 0; step <= 28; step += 1) {
+            const progress = step / 28;
+            const x = -width * 1.35 + progress * width * 2.7;
+            const wave = Math.sin(progress * Math.PI * 2 * frequency + phase + phaseOffset) * height * 0.16 * warpStrength;
+            const curl = Math.cos(progress * Math.PI * 4 + phase * 0.8 + phaseOffset) * height * 0.055 * warpStrength;
+            const y = startY + wave + curl;
+            if (step === 0) context.moveTo(x, y);
+            else context.lineTo(x, y);
+          }
+          context.stroke();
+          context.restore();
+        };
+
+        drawRibbon(0, 0.48, 18 + noise * 18);
+        drawRibbon(0.8, 0.2, 7 + noise * 10);
+      });
+
+      if (noise > 0) {
+        context.globalCompositeOperation = "source-over";
+        context.fillStyle = colorWithAlpha("#f2f4ec", Math.min(0.08, noise * 0.24));
+        for (let index = 0; index < 90; index += 1) {
+          const x = ((index * 73.17 + elapsed * 8) % (width * 2)) - width;
+          const y = ((index * 41.93 + elapsed * 3) % (height * 2)) - height;
+          context.fillRect(x, y, 0.7, 0.7);
+        }
+      }
+      context.restore();
+      frame = window.requestAnimationFrame(draw);
+    };
+
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    frame = window.requestAnimationFrame(draw);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("pointermove", updatePointer);
+    };
+  }, [autoRotate, colors, frequency, mouseInfluence, noise, parallax, rotation, scale, speed, transparent, warpStrength]);
+
+  return <canvas ref={canvasRef} className="color-bends" aria-hidden="true" />;
 }
 
 function WorkGrid({ items = projects }: { items?: Project[] }) {
@@ -153,6 +302,22 @@ function Home() {
       </section>
 
       <section className="section home-profile" id="profile" aria-labelledby="profile-title">
+        <div className="home-profile__bends" aria-hidden="true">
+          <ColorBends
+            rotation={75}
+            speed={0.15}
+            colors={["#7cff67", "#d58400", "#b51a00"]}
+            transparent
+            autoRotate={1}
+            scale={2}
+            frequency={1}
+            warpStrength={1}
+            mouseInfluence={0.7}
+            parallax={0.6}
+            noise={0.15}
+          />
+          <span className="home-profile__bends-shade" />
+        </div>
         <div className="home-profile__visual">
           <img src={asset("on-set.jpg")} alt="林键明在拍摄现场" loading="lazy" decoding="async" />
           <span>Profile / 02</span>
