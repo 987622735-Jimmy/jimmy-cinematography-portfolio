@@ -379,6 +379,9 @@ export const projects: Project[] = [
     lenses: "—",
     videos: [
       { src: "videos/interview-international-womens-day.mp4", poster: "videos/posters/interview-international-womens-day.jpg", title: "国际妇女节人物采访", titleEn: "International Women's Day" },
+      { src: "videos/interview-outer-liu.mp4", poster: "videos/posters/interview-outer-liu.jpg", title: "对话 Outer 刘佳科｜Crafted in China", titleEn: "Outer × Liu Jiake — Crafted in China" },
+      { src: "videos/interview-youse-wei.mp4", poster: "videos/posters/interview-youse-wei.jpg", title: "对话有色魏民｜中国设计如何打造世界品牌", titleEn: "Yose × Wei Min — Chinese Design, Global Brands" },
+      { src: "videos/interview-tiantu-feng.mp4", poster: "videos/posters/interview-tiantu-feng.jpg", title: "对话天图冯卫东｜我的二十二年品牌方法论", titleEn: "Tiantu × Feng Weidong — 22 Years of Brand Methodology" },
     ],
   },
 ];
