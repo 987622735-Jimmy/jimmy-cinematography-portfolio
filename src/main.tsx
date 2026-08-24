@@ -621,6 +621,7 @@ function Home() {
           <p className="hero__name" lang="en">JIMMY</p>
           <p className="hero__role">导演摄影师 <span>Director & Cinematographer</span></p>
           <p className="hero__statement">擅长以光影、构图与镜头节奏，把产品功能转化为有情绪的视觉叙事。</p>
+          <p className="hero__production">TVC 项目全流程制片能力，能够统筹预算、人员、资源与制作进度，在合理成本内保障拍摄执行与成片品质，并按节点高效推进项目落地。</p>
           <div className="hero__actions">
             <a className="hero__button" href={path("contact/")}>联系我 <span>Contact</span></a>
             <a className="text-link text-link--light" href={path("work/")}>
@@ -996,4 +997,3 @@ function About() {
       <section className="about-section about-columns">
         <div>
           <Eyebrow>核心能力 / Skills</Eyebrow>
-          <ul><li>广告 TVC 摄影与现场执行</li><li>光影设计、构图与镜头语言</li><li>创意策划、脚本与分镜 rundown</li><li>产品卖点提炼与视觉叙事</li><li>制作统筹、供应商与影棚管理</li></ul>
