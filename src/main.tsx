@@ -933,7 +933,7 @@ function ProjectPage({ project }: { project: Project }) {
           />
         </figure>
 
-        <section className="project-films" aria-label={`${project.title} 影片`}>
+        <section className="project-films project-films--compact" aria-label={`${project.title} 影片`}>
           <div className="project-films__heading">
             <Eyebrow>影片 / Films</Eyebrow>
             <p>先看封面，悬停预览 4 秒，点击画面播放完整视频。</p>
