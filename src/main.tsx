@@ -879,8 +879,7 @@ function Work() {
             <button
               className={activeCategory === category.id ? "is-active" : ""}
               key={category.id}
-              style={frameStyle}
-      type="button"
+              type="button"
               role="tab"
               aria-selected={activeCategory === category.id}
               onClick={() => setActiveCategory(category.id)}
@@ -903,7 +902,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   const previewRef = useRef<HTMLVideoElement>(null);
   const source = video?.src ?? project.videoUrl;
   const poster = video?.poster ? media(video.poster) : asset(project.images[0]);
-  const frameStyle = { "--frame-bg": `url(\"${poster}\")` } as CSSProperties;
+  const frameStyle = { "--frame-bg": `url("${poster}")` } as CSSProperties;
   const title = video?.title ?? `${project.title} 影片`;
   const titleEn = video?.titleEn ?? "Film";
   const videoShapeClass = ["nongfu", "oppo", "midea"].includes(project.slug) ? " project-video--vertical" : "";
@@ -984,6 +983,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   return (
     <button
       className={`project-video project-video--poster${videoShapeClass}${previewing ? " is-previewing" : ""}`}
+      style={frameStyle}
       type="button"
       onClick={() => { setPreviewing(false); setPlaying(true); }}
       onPointerEnter={() => { if (canPreview) setPreviewing(true); }}
@@ -1027,7 +1027,7 @@ function ProjectPage({ project }: { project: Project }) {
 
         <figure
           className="project__lead-image"
-          style={{ "--frame-bg": `url(\"${asset(project.images[0])}\")` } as CSSProperties}
+          style={{ "--frame-bg": `url("${asset(project.images[0])}")` } as CSSProperties}
         >
           <img
             src={asset(project.images[0])}
@@ -1189,6 +1189,14 @@ function Contact() {
         <div className="contact__links">
           <a href="mailto:987622735@qq.com"><span>邮箱 <i>Email</i></span>987622735@qq.com</a>
           <a href="tel:+8615918606378"><span>电话 <i>Phone</i></span>+86 159 1860 6378</a>
+          <div className="contact__wechat">
+            <div>
+              <span>微信 <i>WeChat</i></span>
+              <strong>yeah ～</strong>
+              <p>扫码添加微信</p>
+            </div>
+            <img src={asset("wechat-qr.jpg")} alt="微信二维码，昵称 yeah ～" loading="lazy" decoding="async" />
+          </div>
         </div>
         <p className="contact__note">常驻广东深圳，可通过邮箱获取完整简历与作品资料。<br /><span lang="en">Based in Shenzhen, China.</span></p>
       </section>
@@ -1224,3 +1232,4 @@ function App() {
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
+
