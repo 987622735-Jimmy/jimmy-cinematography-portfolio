@@ -1101,7 +1101,7 @@ function About() {
         <div>
           <Eyebrow>02 — 关于 / About</Eyebrow>
           <SplitText as="h1" text={"用画面，\n承载感受。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
-          <p className="about-hero__intro">林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于以光影、构图和镜头语言服务品牌叙事与产品表达，项目覆盖专业摄影器材配件、OPPO、农夫山泉、美的，以及 3C 数码与母婴电商产品等领域。</p>
+          <p className="about-hero__intro">林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于以光影、构图和镜头语言服务品牌叙事与产品表达，项目覆盖健身器械、小家电、专业摄影器材配件、OPPO、农夫山泉、美的，以及 3C 数码与母婴电商产品等领域。</p>
           <p className="about-hero__intro about-hero__intro--secondary">熟悉 ARRI Alexa、RED 等数字电影摄影机与灯光设计；重视团队协作和现场效率，在技术与美学之间寻找恰当平衡。</p>
         </div>
       </section>
