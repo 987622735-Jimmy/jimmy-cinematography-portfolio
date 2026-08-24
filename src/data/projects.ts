@@ -83,7 +83,7 @@ export const projects: Project[] = [
     lenses: "—",
     videos: [
       { src: "videos/fitness-director-film.mp4", poster: "collection/fitness-director-01-shoes.jpg", title: "麦瑞克健身器材｜导演作品", titleEn: "MERACH Fitness Director Film" },
-      { src: "https://www.amazon.com/live/video/01d57f5f905543fa885c74d69a686c58?ref_=cm_sw_cp_r_ib_dt_XxvTVRvnK0rSB", poster: "collection/fitness-director-04-treadmill.jpg", title: "Amazon Live 直播展示", titleEn: "Amazon Live Showcase" },
+      { src: "videos/fitness-s36-aura.mp4", poster: "collection/fitness-director-04-treadmill.jpg", title: "S36 Aura 健身车", titleEn: "S36 Aura Exercise Bike" },
     ],
   },
   {
