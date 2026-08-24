@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { createRoot } from "react-dom/client";
-import { categoryOptions, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
+import { categoryOptions, orderedProjects, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
 import "./styles.css";
 
 const basePath = import.meta.env.BASE_URL;
@@ -594,7 +594,7 @@ function Home() {
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
           <SplitText as="h2" id="selected-work" text={"大画面，\n先于解释发生。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         </div>
-        <WorkGrid items={projects.slice(0, 6)} />
+        <WorkGrid items={orderedProjects.slice(0, 6)} />
         <a className="text-link section-link" href={path("work/")}>
           查看全部 {projects.length} 组作品 <span aria-hidden="true">↘</span>
         </a>
@@ -637,8 +637,8 @@ function Home() {
 function Work() {
   const [activeCategory, setActiveCategory] = useState<"all" | ProjectCategory>("all");
   const visibleProjects = activeCategory === "all"
-    ? projects
-    : projects.filter((project) => project.category === activeCategory);
+    ? orderedProjects
+    : orderedProjects.filter((project) => project.category === activeCategory);
 
   useMetadata(
     "作品｜林键明 JIMMY",
