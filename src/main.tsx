@@ -680,6 +680,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   const poster = video?.poster ? asset(video.poster) : asset(project.images[0]);
   const title = video?.title ?? `${project.title} 影片`;
   const titleEn = video?.titleEn ?? "Film";
+  const videoShapeClass = project.slug === "nongfu" || project.slug === "oppo" ? " project-video--vertical" : "";
 
   if (!source) {
     return (
@@ -709,7 +710,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   if (playing) {
     if (source.startsWith("videos/")) {
       return (
-        <div className="project-video project-video--local">
+        <div className={`project-video project-video--local${videoShapeClass}`}>
           <video controls autoPlay playsInline preload="metadata" poster={poster}>
             <source src={path(source)} type="video/mp4" />
             当前浏览器不支持 HTML5 视频播放。
@@ -732,7 +733,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
 
   return (
     <button
-      className="project-video project-video--poster"
+      className={`project-video project-video--poster${videoShapeClass}`}
       type="button"
       onClick={() => setPlaying(true)}
       aria-label={`播放 ${title}`}
