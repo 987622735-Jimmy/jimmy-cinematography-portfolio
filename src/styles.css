@@ -173,7 +173,7 @@ button, input { font: inherit; }
   .work-card:hover .work-card__preview, .work-card:focus-visible .work-card__preview { opacity: 1; }
   .work-card:hover .work-card__veil, .work-card:focus-visible .work-card__veil { background: linear-gradient(180deg, rgb(0 0 0 / .12) 25%, rgb(0 0 0 / .74) 100%); }
   .work-card:hover .work-card__copy, .work-card:focus-visible .work-card__copy { transform: translateY(-.35rem); }
-  .work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(228 196 91 / .8); box-shadow: 0 0 0 1px rgb(124 255 103 / .15), 0 0 30px rgb(124 255 103 / .18); }
+  .work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(228 196 91 / .8); box-shadow: none; }
 }
 
 @media (min-width: 720px) {
