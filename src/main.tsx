@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createRoot } from "react-dom/client";
 import { categoryOptions, orderedProjects, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
 import "./styles.css";
@@ -170,8 +170,8 @@ function Footer() {
 
 function Layout({ children }: { children: React.ReactNode }) {
   const currentPath = getCurrentPath();
-  // The Work intro already has a video layer; avoid stacking a second full-screen canvas there.
-  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/work" && currentPath !== "/contact";
+  // Work and Project Detail pages stay as clean dark screening rooms; only About keeps the ambient canvas.
+  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/work" && currentPath !== "/contact" && !currentPath.startsWith("/work/");
 
   return (
     <>
@@ -506,12 +506,12 @@ function PageBackdrop() {
   );
 }
 
-function WorkCard({ project, index }: { project: Project; index: number }) {
+function WorkCard({ project, index, cover }: { project: Project; index: number; cover?: string }) {
   const [previewing, setPreviewing] = useState(false);
   const previewVideo = project.videos?.find((video) => video.src.startsWith("videos/"));
   const previewRef = useRef<HTMLVideoElement>(null);
-  const pointerFrame = useRef<number>(0);
   const canHoverPreview = typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const coverImage = cover ?? project.images[0];
 
   useEffect(() => {
     const video = previewRef.current;
@@ -529,23 +529,6 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
     return () => window.clearTimeout(stopPreview);
   }, [previewing]);
 
-  useEffect(() => () => {
-    if (pointerFrame.current) window.cancelAnimationFrame(pointerFrame.current);
-  }, []);
-
-  const handlePointerMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
-    if (!canHoverPreview || event.pointerType !== "mouse" || pointerFrame.current) return;
-    const target = event.currentTarget;
-    const bounds = target.getBoundingClientRect();
-    const x = event.clientX - bounds.left;
-    const y = event.clientY - bounds.top;
-    pointerFrame.current = window.requestAnimationFrame(() => {
-      pointerFrame.current = 0;
-      target.style.setProperty("--spotlight-x", `${x}px`);
-      target.style.setProperty("--spotlight-y", `${y}px`);
-    });
-  };
-
   return (
     <a
       className={`work-card work-card--${(index % 3) + 1}`}
@@ -556,11 +539,10 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
       onPointerLeave={() => setPreviewing(false)}
       onFocus={() => { if (canHoverPreview) setPreviewing(true); }}
       onBlur={() => setPreviewing(false)}
-      onPointerMove={handlePointerMove}
     >
       <img
         className="work-card__image"
-        src={asset(project.images[0])}
+        src={asset(coverImage)}
         alt={`${project.title} 项目静帧`}
         loading="lazy"
         decoding="async"
@@ -573,14 +555,13 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
           muted
           playsInline
           preload={previewing ? "metadata" : "none"}
-          poster={asset(project.images[0])}
+          poster={asset(coverImage)}
           aria-hidden="true"
         >
           <source src={path(previewVideo.src)} type="video/mp4" />
         </video>
       ) : null}
       <span className="work-card__veil" aria-hidden="true" />
-      <span className="work-card__spotlight" aria-hidden="true" />
       <span className="work-card__copy">
         <strong>{project.title}</strong>
         <small>{project.role}</small>
@@ -594,13 +575,22 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
   );
 }
 
-function WorkGrid({ items = projects, variant = "" }: { items?: Project[]; variant?: "editorial" | "" }) {
+function WorkGrid({ items = projects, variant = "", covers }: { items?: Project[]; variant?: "editorial" | ""; covers?: Record<string, string> }) {
   return (
     <div className={`work-grid${variant ? ` work-grid--${variant}` : ""}`}>
-      {items.map((project, index) => <WorkCard key={project.slug} project={project} index={index} />)}
+      {items.map((project, index) => <WorkCard key={project.slug} project={project} index={index} cover={covers?.[project.slug]} />)}
     </div>
   );
 }
+
+const homeCoverImages: Record<string, string> = {
+  fitness: "collection/fitness-director-04-treadmill.jpg",
+  appliances: "collection/image6.jpg",
+  smallrig: "collection/image38.jpg",
+  mamazing: "collection/image26.jpg",
+  "asus-loctek": "collection/image19.jpg",
+  asus: "collection/image23.jpg",
+};
 
 const capabilityCards = [
   { index: "01", title: "制片统筹", titleEn: "Production Management", text: "负责项目立项与 Brief 对接，统筹预算、质量与制作节奏；组建摄制团队，推进场地与模特协调，衔接后期剪辑、TC 审核与最终交片。" },
@@ -816,7 +806,7 @@ function Home() {
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
           <h2 id="selected-work">画面服务产品，<br />影像传播品牌。</h2>
         </div>
-        <WorkGrid items={orderedProjects.slice(0, 6)} variant="editorial" />
+        <WorkGrid items={orderedProjects.slice(0, 6)} variant="editorial" covers={homeCoverImages} />
         <a className="text-link section-link" href={path("work/")}>
           查看全部 {projects.length} 组作品 <span aria-hidden="true">↘</span>
         </a>
@@ -1241,4 +1231,3 @@ function App() {
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
-
