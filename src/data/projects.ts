@@ -136,6 +136,10 @@ export const projects: Project[] = [
     cinematographer: "—",
     camera: "—",
     lenses: "—",
+    videos: [
+      { src: "videos/mamazing-evonook-crib.mp4", poster: "videos/posters/mamazing-evonook-crib.jpg", title: "EvoNook 7 合 1 婴儿床", titleEn: "EvoNook 7-in-1 Convertible Mini Crib" },
+      { src: "videos/mamazing-high-chair.mp4", poster: "videos/posters/mamazing-high-chair.jpg", title: "MAMAZING 8 合 1 成长餐椅", titleEn: "MAMAZING 8-in-1 High Chair" },
+    ],
   },
   {
     slug: "esr",
@@ -352,6 +356,10 @@ export const projects: Project[] = [
     cinematographer: "林键明 JIMMY",
     camera: "—",
     lenses: "—",
+    videos: [
+      { src: "videos/midea-short-form-01.mp4", poster: "videos/posters/midea-short-form-01.jpg", title: "清洁刷产品短片", titleEn: "Cleaning Brush Product Film" },
+      { src: "videos/midea-short-form-02.mp4", poster: "videos/posters/midea-short-form-02.jpg", title: "Eureka 手持吸尘器", titleEn: "Eureka Handheld Vacuum" },
+    ],
   },
   {
     slug: "interview",
