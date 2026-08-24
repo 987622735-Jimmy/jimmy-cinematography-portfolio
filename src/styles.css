@@ -445,3 +445,4 @@ main, .site-footer { position: relative; z-index: 1; }
 /* Keep below-the-fold sections out of the initial render tree on long portfolio pages. */
 .home-profile, .home-selected, .home-capabilities, .home-contact,
 .about-section, .resume-section, .project__stills { content-visibility: auto; contain-intrinsic-size: 720px; }
+.section--work-page, .project-films__grid { content-visibility: auto; contain-intrinsic-size: 900px; }
