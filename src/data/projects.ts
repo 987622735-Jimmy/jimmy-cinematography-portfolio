@@ -31,7 +31,7 @@ export const categoryOptions = [
   { id: "appliances", label: "小家电", labelEn: "Home Appliances" },
   { id: "camera", label: "摄影配件类", labelEn: "Camera Gear" },
   { id: "baby", label: "母婴类", labelEn: "Family" },
-  { id: "digital", label: "3C 数码类", labelEn: "Digital" },
+  { id: "digital", label: "3C数码类", labelEn: "Digital" },
   { id: "music", label: "音乐产品类", labelEn: "Music Products" },
   { id: "interview", label: "采访", labelEn: "Interview" },
   { id: "short-form", label: "短视频类", labelEn: "Short Form" },
