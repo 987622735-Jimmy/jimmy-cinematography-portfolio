@@ -106,10 +106,21 @@ function Header() {
   const [floating, setFloating] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setFloating(window.scrollY > Math.max(window.innerHeight * .82, 520));
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const nextFloating = window.scrollY > Math.max(window.innerHeight * .82, 520);
+        setFloating((current) => current === nextFloating ? current : nextFloating);
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   const currentPath = getCurrentPath();
@@ -158,7 +169,9 @@ function Footer() {
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const hasPageBackdrop = getCurrentPath() !== "/";
+  const currentPath = getCurrentPath();
+  // The Work intro already has a video layer; avoid stacking a second full-screen canvas there.
+  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/work";
 
   return (
     <>
@@ -293,6 +306,8 @@ type ColorBendsProps = {
   noise?: number;
 };
 
+const colorBendsPalette = ["#7cff67", "#d58400", "#b51a00"];
+
 function colorWithAlpha(color: string, alpha: number) {
   const value = color.replace("#", "");
   const hex = value.length === 3
@@ -331,13 +346,17 @@ function ColorBends({
     let width = 0;
     let height = 0;
     let pixelRatio = 1;
+    let isIntersecting = true;
+    let documentVisible = document.visibilityState === "visible";
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const compactViewport = window.matchMedia("(max-width: 720px)");
     const pointer = { x: 0.5, y: 0.5 };
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
-      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      pixelRatio = Math.min(window.devicePixelRatio || 1, compactViewport.matches ? 1 : 1.25);
       canvas.width = Math.round(width * pixelRatio);
       canvas.height = Math.round(height * pixelRatio);
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -348,7 +367,15 @@ function ColorBends({
       pointer.y = event.clientY / Math.max(window.innerHeight, 1);
     };
 
+    const schedule = () => {
+      if (!reducedMotion.matches && isIntersecting && documentVisible && !frame) {
+        frame = window.requestAnimationFrame(draw);
+      }
+    };
+
     const draw = (time: number) => {
+      frame = 0;
+      if (!isIntersecting || !documentVisible) return;
       const delta = Math.min(time - lastTime, 40);
       lastTime = time;
       elapsed += delta * 0.001 * speed;
@@ -402,25 +429,46 @@ function ColorBends({
       if (noise > 0) {
         context.globalCompositeOperation = "source-over";
         context.fillStyle = colorWithAlpha("#f2f4ec", Math.min(0.08, noise * 0.24));
-        for (let index = 0; index < 90; index += 1) {
+        const particleCount = compactViewport.matches ? 34 : 70;
+        for (let index = 0; index < particleCount; index += 1) {
           const x = ((index * 73.17 + elapsed * 8) % (width * 2)) - width;
           const y = ((index * 41.93 + elapsed * 3) % (height * 2)) - height;
           context.fillRect(x, y, 0.7, 0.7);
         }
       }
       context.restore();
-      frame = window.requestAnimationFrame(draw);
+      schedule();
     };
 
     resize();
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+      if (isIntersecting) schedule();
+      else if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    }, { threshold: 0 });
+    visibilityObserver.observe(canvas);
+    const onDocumentVisibility = () => {
+      documentVisible = document.visibilityState === "visible";
+      if (documentVisible) schedule();
+      else if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    };
+    document.addEventListener("visibilitychange", onDocumentVisibility);
     window.addEventListener("pointermove", updatePointer, { passive: true });
-    frame = window.requestAnimationFrame(draw);
+    draw(performance.now());
 
     return () => {
-      window.cancelAnimationFrame(frame);
+      if (frame) window.cancelAnimationFrame(frame);
       observer.disconnect();
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", onDocumentVisibility);
       window.removeEventListener("pointermove", updatePointer);
     };
   }, [autoRotate, colors, frequency, mouseInfluence, noise, parallax, rotation, scale, speed, transparent, warpStrength]);
@@ -434,7 +482,7 @@ function PageBackdrop() {
       <ColorBends
         rotation={75}
         speed={0.15}
-        colors={["#7cff67", "#d58400", "#b51a00"]}
+        colors={colorBendsPalette}
         transparent
         autoRotate={1}
         scale={2}
@@ -497,13 +545,13 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
         sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
       />
       {previewVideo ? (
-        <video
+      <video
           className="work-card__preview"
           ref={previewRef}
           muted
           playsInline
-          preload="metadata"
-          poster={media(previewVideo.poster)}
+          preload={previewing ? "metadata" : "none"}
+          poster={asset(project.images[0])}
           aria-hidden="true"
         >
           <source src={path(previewVideo.src)} type="video/mp4" />
@@ -608,12 +656,21 @@ function AboutBehindScenesGallery() {
 
 function HeroReel() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [readyToLoad, setReadyToLoad] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const activeVideo = heroReelVideos[activeIndex % heroReelVideos.length];
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData = "connection" in navigator
+    && Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setReadyToLoad(true), 350);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !activeVideo) return;
+    if (!video || !activeVideo || !readyToLoad) return;
 
     let timer: number | undefined;
     const startPreview = () => {
@@ -632,9 +689,13 @@ function HeroReel() {
       video.pause();
       video.removeEventListener("loadedmetadata", startPreview);
     };
-  }, [activeIndex, activeVideo]);
+  }, [activeIndex, activeVideo, readyToLoad]);
 
   if (!activeVideo) return null;
+
+  if (reducedMotion || saveData) {
+    return <img className="hero__video hero__video--poster" src={media(activeVideo.poster)} alt="" aria-hidden="true" />;
+  }
 
   return (
     <video
@@ -643,7 +704,7 @@ function HeroReel() {
       ref={videoRef}
       muted
       playsInline
-      preload="metadata"
+      preload={readyToLoad ? "metadata" : "none"}
       poster={media(activeVideo.poster)}
       aria-hidden="true"
       onEnded={() => setActiveIndex((current) => (current + 1) % heroReelVideos.length)}
@@ -690,7 +751,7 @@ function Home() {
           <ColorBends
             rotation={75}
             speed={0.15}
-            colors={["#7cff67", "#d58400", "#b51a00"]}
+            colors={colorBendsPalette}
             transparent
             autoRotate={1}
             scale={2}
