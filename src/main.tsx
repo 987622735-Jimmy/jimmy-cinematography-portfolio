@@ -515,8 +515,6 @@ const capabilityCards = [
 const profileBehindScenes = [
   { src: "on-set.jpg", alt: "美术空间内的摄制团队" },
   { src: "hero-on-set.jpg", alt: "街头移动拍摄现场" },
-  { src: "collection/image19.jpg", alt: "灯光与现场执行" },
-  { src: "collection/image21.jpg", alt: "外景拍摄现场" },
 ];
 
 const heroReelVideos: ProjectVideo[] = Array.from(
