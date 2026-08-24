@@ -163,6 +163,10 @@ export const projects: Project[] = [
     cinematographer: "林键明 JIMMY",
     camera: "—",
     lenses: "—",
+    videos: [
+      { src: "videos/ipad-film-magic-keyboard.mp4", poster: "videos/posters/ipad-film-magic-keyboard.jpg", title: "妙控款 10.9", titleEn: "Magic Keyboard 10.9" },
+      { src: "videos/ipad-film-hinge-en.mp4", poster: "videos/posters/ipad-film-hinge-en.jpg", title: "转轴款", titleEn: "Hinge Edition" },
+    ],
   },
   {
     slug: "magsafe-stand",
@@ -203,8 +207,6 @@ export const projects: Project[] = [
     lenses: "—",
     videos: [
       { src: "videos/ipad-film-ipad-single.mp4", poster: "videos/posters/ipad-film-ipad-single.jpg", title: "iPad 单品", titleEn: "iPad Product Film" },
-      { src: "videos/ipad-film-magic-keyboard.mp4", poster: "videos/posters/ipad-film-magic-keyboard.jpg", title: "妙控款 10.9", titleEn: "Magic Keyboard 10.9" },
-      { src: "videos/ipad-film-hinge-en.mp4", poster: "videos/posters/ipad-film-hinge-en.jpg", title: "转轴款", titleEn: "Hinge Edition" },
     ],
   },
   {
