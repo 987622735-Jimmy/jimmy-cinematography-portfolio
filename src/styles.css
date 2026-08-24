@@ -159,6 +159,11 @@ button, input { font: inherit; }
 .contact__links a:hover { color: #a7c7ff; }
 .contact__links span { color: #8e8d87; font-family: "SFMono-Regular", Consolas, monospace; font-size: .58rem; letter-spacing: .05em; text-transform: uppercase; }
 .contact__note { max-width: 22rem; margin: 3rem 0 0; color: #9a9992; font-size: .85rem; line-height: 1.6; }
+.contact__wechat { display: flex; align-items: center; justify-content: space-between; gap: 2rem; border-top: 1px solid #353532; padding: 1rem 0; }
+.contact__wechat > div { display: grid; gap: .5rem; }
+.contact__wechat strong { color: #deddd8; font-size: clamp(.95rem, 2vw, 1.22rem); font-weight: 500; }
+.contact__wechat p { margin: 0; color: #9a9992; font-size: .78rem; }
+.contact__wechat img { width: clamp(8.5rem, 16vw, 12rem); height: auto; flex: 0 0 auto; background: #fff; }
 
 .not-found { min-height: 75svh; padding: 12rem 1.25rem 4rem; }
 
@@ -357,6 +362,11 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 .hero__button--dark { border-color: var(--bg); background: var(--bg); color: var(--yellow); }
   .hero__button--dark:hover { border-color: var(--red); background: var(--red); color: var(--text); }
 
+/* Keep below-the-fold sections out of the initial render tree on long portfolio pages. */
+.home-profile, .home-selected, .home-capabilities, .home-contact,
+.about-section, .resume-section, .project__stills { content-visibility: auto; contain-intrinsic-size: 720px; }
+.section--work-page, .project-films__grid { content-visibility: auto; contain-intrinsic-size: 900px; }
+
 @media (min-width: 720px) {
   .site-header { padding-top: 2rem; }
   .home-profile { grid-template-columns: minmax(18rem, .78fr) 1.22fr; gap: clamp(3rem, 9vw, 10rem); }
@@ -442,7 +452,3 @@ main, .site-footer { position: relative; z-index: 1; }
   .project-films--compact .project-films__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
 }
 
-/* Keep below-the-fold sections out of the initial render tree on long portfolio pages. */
-.home-profile, .home-selected, .home-capabilities, .home-contact,
-.about-section, .resume-section, .project__stills { content-visibility: auto; contain-intrinsic-size: 720px; }
-.section--work-page, .project-films__grid { content-visibility: auto; contain-intrinsic-size: 900px; }
