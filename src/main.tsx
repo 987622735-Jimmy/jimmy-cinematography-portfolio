@@ -333,6 +333,12 @@ function ColorBends({
   noise = 0.15,
 }: ColorBendsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const compactViewport = typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches;
+  const connection = typeof navigator !== "undefined"
+    ? (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection
+    : undefined;
+  const lowBandwidth = Boolean(connection?.saveData) || connection?.effectiveType === "slow-2g" || connection?.effectiveType === "2g";
+  const useStaticBackground = compactViewport || lowBandwidth;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -463,7 +469,7 @@ function ColorBends({
     };
     document.addEventListener("visibilitychange", onDocumentVisibility);
     if (finePointer) window.addEventListener("pointermove", updatePointer, { passive: true });
-    draw(performance.now());
+    if (!compactViewport.matches && !lowBandwidth) draw(performance.now());
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
@@ -472,9 +478,11 @@ function ColorBends({
       document.removeEventListener("visibilitychange", onDocumentVisibility);
       if (finePointer) window.removeEventListener("pointermove", updatePointer);
     };
-  }, [autoRotate, colors, frequency, mouseInfluence, noise, parallax, rotation, scale, speed, transparent, warpStrength]);
+  }, [autoRotate, colors, frequency, lowBandwidth, mouseInfluence, noise, parallax, rotation, scale, speed, transparent, useStaticBackground, warpStrength]);
 
-  return <canvas ref={canvasRef} className="color-bends" aria-hidden="true" />;
+  return useStaticBackground
+    ? <div className="color-bends color-bends--static" aria-hidden="true" />
+    : <canvas ref={canvasRef} className="color-bends" aria-hidden="true" />;
 }
 
 function PageBackdrop() {
@@ -502,6 +510,8 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
   const [previewing, setPreviewing] = useState(false);
   const previewVideo = project.videos?.find((video) => video.src.startsWith("videos/"));
   const previewRef = useRef<HTMLVideoElement>(null);
+  const pointerFrame = useRef<number>(0);
+  const canHoverPreview = typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   useEffect(() => {
     const video = previewRef.current;
@@ -519,10 +529,21 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
     return () => window.clearTimeout(stopPreview);
   }, [previewing]);
 
+  useEffect(() => () => {
+    if (pointerFrame.current) window.cancelAnimationFrame(pointerFrame.current);
+  }, []);
+
   const handlePointerMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty("--spotlight-x", `${event.clientX - bounds.left}px`);
-    event.currentTarget.style.setProperty("--spotlight-y", `${event.clientY - bounds.top}px`);
+    if (!canHoverPreview || event.pointerType !== "mouse" || pointerFrame.current) return;
+    const target = event.currentTarget;
+    const bounds = target.getBoundingClientRect();
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+    pointerFrame.current = window.requestAnimationFrame(() => {
+      pointerFrame.current = 0;
+      target.style.setProperty("--spotlight-x", `${x}px`);
+      target.style.setProperty("--spotlight-y", `${y}px`);
+    });
   };
 
   return (
@@ -531,9 +552,9 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
       href={path(`work/${project.slug}/`)}
       key={project.slug}
       aria-label={`查看 ${project.title} 图集与影片`}
-      onPointerEnter={() => setPreviewing(true)}
+      onPointerEnter={(event) => { if (canHoverPreview && event.pointerType === "mouse") setPreviewing(true); }}
       onPointerLeave={() => setPreviewing(false)}
-      onFocus={() => setPreviewing(true)}
+      onFocus={() => { if (canHoverPreview) setPreviewing(true); }}
       onBlur={() => setPreviewing(false)}
       onPointerMove={handlePointerMove}
     >
@@ -662,13 +683,17 @@ function HeroReel() {
   const activeVideo = heroReelVideos[activeIndex % heroReelVideos.length];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const compactViewport = window.matchMedia("(max-width: 720px)").matches;
-  const saveData = "connection" in navigator
-    && Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+  const connection = "connection" in navigator
+    ? (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection
+    : undefined;
+  const saveData = Boolean(connection?.saveData);
+  const slowNetwork = connection?.effectiveType === "slow-2g" || connection?.effectiveType === "2g";
 
   useEffect(() => {
+    if (compactViewport || saveData || slowNetwork) return undefined;
     const timer = window.setTimeout(() => setReadyToLoad(true), 350);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [compactViewport, saveData, slowNetwork]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -695,8 +720,8 @@ function HeroReel() {
 
   if (!activeVideo) return null;
 
-  if (reducedMotion || compactViewport || saveData) {
-    return <img className="hero__video hero__video--poster" src={media(activeVideo.poster)} alt="" aria-hidden="true" />;
+  if (reducedMotion || compactViewport || saveData || slowNetwork) {
+    return <img className="hero__video hero__video--poster" src={media(activeVideo.poster)} alt="" aria-hidden="true" fetchPriority="high" decoding="async" sizes="100vw" />;
   }
 
   return (
