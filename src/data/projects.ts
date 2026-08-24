@@ -270,11 +270,11 @@ export const projects: Project[] = [
     lenses: "—",
     videos: [
       { src: "videos/smallrig-innovation-button.mp4", poster: "videos/posters/smallrig-innovation-button.jpg", title: "音乐产品｜创新拍拍键", titleEn: "Music Product — Innovation Button" },
-      { src: "videos/music-style-pack-world.mp4", poster: "collection/smallrig-music-innovation-button.jpg", title: "风格包世界｜探索音乐玩法", titleEn: "Style Pack World — Playful Sound" },
-      { src: "videos/music-style-pack-rnb-rock.mp4", poster: "collection/smallrig-music-innovation-button.jpg", title: "风格包被攻击了｜R&B × ROCK", titleEn: "Style Pack — R&B × Rock" },
-      { src: "videos/music-press-strum-sing.mp4", poster: "collection/smallrig-music-innovation-button.jpg", title: "一按一拨｜即刻弹唱", titleEn: "Press & Strum — Sing Along" },
-      { src: "videos/music-tap-innovation.mp4", poster: "collection/smallrig-music-innovation-button.jpg", title: "创新拍拍键｜音乐短片", titleEn: "Innovation Button — Tap to Create" },
-      { src: "videos/music-hifi-atmosphere.mp4", poster: "collection/smallrig-music-innovation-button.jpg", title: "氛围感 Hi-Fi 音箱", titleEn: "Hi-Fi Speaker — Atmosphere" },
+      { src: "videos/music-style-pack-world.mp4", poster: "videos/posters/music-style-pack-world.jpg", title: "风格包世界｜探索音乐玩法", titleEn: "Style Pack World — Playful Sound" },
+      { src: "videos/music-style-pack-rnb-rock.mp4", poster: "videos/posters/music-style-pack-rnb-rock.jpg", title: "风格包被攻击了｜R&B × ROCK", titleEn: "Style Pack — R&B × Rock" },
+      { src: "videos/music-press-strum-sing.mp4", poster: "videos/posters/music-press-strum-sing.jpg", title: "一按一拨｜即刻弹唱", titleEn: "Press & Strum — Sing Along" },
+      { src: "videos/music-tap-innovation.mp4", poster: "videos/posters/music-tap-innovation.jpg", title: "创新拍拍键｜音乐短片", titleEn: "Innovation Button — Tap to Create" },
+      { src: "videos/music-hifi-atmosphere.mp4", poster: "videos/posters/music-hifi-atmosphere.jpg", title: "氛围感 Hi-Fi 音箱", titleEn: "Hi-Fi Speaker — Atmosphere" },
     ],
   },
   {
