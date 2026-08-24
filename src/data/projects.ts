@@ -359,6 +359,8 @@ export const projects: Project[] = [
     videos: [
       { src: "videos/midea-short-form-01.mp4", poster: "videos/posters/midea-short-form-01.jpg", title: "清洁刷产品短片", titleEn: "Cleaning Brush Product Film" },
       { src: "videos/midea-short-form-02.mp4", poster: "videos/posters/midea-short-form-02.jpg", title: "Eureka 手持吸尘器", titleEn: "Eureka Handheld Vacuum" },
+      { src: "videos/midea-mess-destroyer.mp4", poster: "videos/posters/midea-mess-destroyer.jpg", title: "Mess Destroyer｜清洁挑战", titleEn: "Mess Destroyer — Achievement Unlocked" },
+      { src: "videos/midea-all-messes-cleaned.mp4", poster: "videos/posters/midea-all-messes-cleaned.jpg", title: "All Messes Cleaned｜一键清洁", titleEn: "All Messes Cleaned" },
     ],
   },
   {
