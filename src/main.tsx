@@ -441,10 +441,7 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
 
     video.currentTime = 0;
     void video.play().catch(() => undefined);
-    const stopPreview = window.setTimeout(() => {
-      video.pause();
-      video.currentTime = 0;
-    }, 4500);
+    const stopPreview = window.setTimeout(() => setPreviewing(false), 4500);
     return () => window.clearTimeout(stopPreview);
   }, [previewing]);
 
