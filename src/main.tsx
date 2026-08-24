@@ -854,7 +854,8 @@ function Work() {
             <button
               className={activeCategory === category.id ? "is-active" : ""}
               key={category.id}
-              type="button"
+              style={frameStyle}
+      type="button"
               role="tab"
               aria-selected={activeCategory === category.id}
               onClick={() => setActiveCategory(category.id)}
@@ -877,6 +878,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   const previewRef = useRef<HTMLVideoElement>(null);
   const source = video?.src ?? project.videoUrl;
   const poster = video?.poster ? media(video.poster) : asset(project.images[0]);
+  const frameStyle = { "--frame-bg": `url(\"${poster}\")` } as CSSProperties;
   const title = video?.title ?? `${project.title} 影片`;
   const titleEn = video?.titleEn ?? "Film";
   const videoShapeClass = ["nongfu", "oppo", "midea"].includes(project.slug) ? " project-video--vertical" : "";
@@ -913,6 +915,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
     return (
       <a
         className="project-video project-video--poster project-video--external"
+        style={frameStyle}
         href={source}
         target="_blank"
         rel="noreferrer"
@@ -932,7 +935,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   if (playing) {
     if (source.startsWith("videos/")) {
       return (
-        <div className={`project-video project-video--local${videoShapeClass}`}>
+        <div className={`project-video project-video--local${videoShapeClass}`} style={frameStyle}>
           <video controls autoPlay playsInline preload="metadata" poster={poster}>
             <source src={path(source)} type="video/mp4" />
             当前浏览器不支持 HTML5 视频播放。
@@ -997,7 +1000,10 @@ function ProjectPage({ project }: { project: Project }) {
           <p>{project.description}</p>
         </div>
 
-        <figure className="project__lead-image">
+        <figure
+          className="project__lead-image"
+          style={{ "--frame-bg": `url(\"${asset(project.images[0])}\")` } as CSSProperties}
+        >
           <img
             src={asset(project.images[0])}
             alt={`${project.title} 主视觉静帧`}
