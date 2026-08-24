@@ -265,7 +265,7 @@ export const projects: Project[] = [
     slug: "mobile-rig",
     title: "iPhone 17 摄影套件",
     titleEn: "iPhone 17 Camera Kit",
-    category: "camera",
+    category: "digital",
     client: "SmallRig",
     type: "产品广告",
     role: "摄影师",
@@ -357,3 +357,8 @@ export const projects: Project[] = [
 
 export const projectBySlug = (slug: string) =>
   projects.find((project) => project.slug === slug);
+
+const categoryRank = new Map(categoryOptions.map((category, index) => [category.id, index]));
+export const orderedProjects = [...projects].sort((a, b) =>
+  (categoryRank.get(a.category) ?? Number.MAX_SAFE_INTEGER) - (categoryRank.get(b.category) ?? Number.MAX_SAFE_INTEGER),
+);
