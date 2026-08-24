@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { categoryOptions, projectBySlug, projects, type Project, type ProjectCategory, type ProjectVideo } from "./data/projects";
 import "./styles.css";
@@ -424,32 +424,85 @@ function ColorBends({
   return <canvas ref={canvasRef} className="color-bends" aria-hidden="true" />;
 }
 
+function WorkCard({ project, index }: { project: Project; index: number }) {
+  const [previewing, setPreviewing] = useState(false);
+  const previewVideo = project.videos?.find((video) => video.src.startsWith("videos/"));
+  const previewRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = previewRef.current;
+    if (!video) return;
+
+    if (!previewing) {
+      video.pause();
+      video.currentTime = 0;
+      return;
+    }
+
+    video.currentTime = 0;
+    void video.play().catch(() => undefined);
+    const stopPreview = window.setTimeout(() => {
+      video.pause();
+      video.currentTime = 0;
+    }, 4500);
+    return () => window.clearTimeout(stopPreview);
+  }, [previewing]);
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--spotlight-x", `${event.clientX - bounds.left}px`);
+    event.currentTarget.style.setProperty("--spotlight-y", `${event.clientY - bounds.top}px`);
+  };
+
+  return (
+    <a
+      className={`work-card work-card--${(index % 3) + 1}`}
+      href={path(`work/${project.slug}/`)}
+      key={project.slug}
+      aria-label={`查看 ${project.title} 图集与影片`}
+      onPointerEnter={() => setPreviewing(true)}
+      onPointerLeave={() => setPreviewing(false)}
+      onFocus={() => setPreviewing(true)}
+      onBlur={() => setPreviewing(false)}
+      onPointerMove={handlePointerMove}
+    >
+      <img
+        className="work-card__image"
+        src={asset(project.images[0])}
+        alt={`${project.title} 项目静帧`}
+        loading="lazy"
+        decoding="async"
+        sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
+      />
+      {previewVideo ? (
+        <video
+          className="work-card__preview"
+          ref={previewRef}
+          muted
+          playsInline
+          preload="metadata"
+          poster={asset(previewVideo.poster)}
+          aria-hidden="true"
+        >
+          <source src={path(previewVideo.src)} type="video/mp4" />
+        </video>
+      ) : null}
+      <span className="work-card__veil" aria-hidden="true" />
+      <span className="work-card__spotlight" aria-hidden="true" />
+      <span className="work-card__copy">
+        <strong>{project.title}</strong>
+        <small lang="en">{project.titleEn}</small>
+        <em>{categoryOptions.find((option) => option.id === project.category)?.label} · {project.year} · {project.role}</em>
+      </span>
+      <span className="work-card__action">查看作品 <i>{previewVideo ? "悬停预览 4 秒" : "查看静帧"}</i></span>
+    </a>
+  );
+}
+
 function WorkGrid({ items = projects }: { items?: Project[] }) {
   return (
     <div className="work-grid">
-      {items.map((project, index) => (
-        <a
-          className={`work-card work-card--${(index % 3) + 1}`}
-          href={path(`work/${project.slug}/`)}
-          key={project.slug}
-          aria-label={`查看 ${project.title} 图集与影片`}
-        >
-          <img
-            src={asset(project.images[0])}
-            alt={`${project.title} 项目静帧`}
-            loading="lazy"
-            decoding="async"
-            sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
-          />
-          <span className="work-card__veil" aria-hidden="true" />
-          <span className="work-card__copy">
-            <strong>{project.title}</strong>
-            <small lang="en">{project.titleEn}</small>
-            <em>{categoryOptions.find((option) => option.id === project.category)?.label} · {project.year} · {project.role}</em>
-          </span>
-          <span className="work-card__action">查看作品 <i>{project.videos?.length ? `${project.videos.length} 部影片` : "View stills"}</i></span>
-        </a>
-      ))}
+      {items.map((project, index) => <WorkCard key={project.slug} project={project} index={index} />)}
     </div>
   );
 }
