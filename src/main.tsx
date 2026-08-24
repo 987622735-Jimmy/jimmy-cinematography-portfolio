@@ -171,7 +171,7 @@ function Footer() {
 function Layout({ children }: { children: React.ReactNode }) {
   const currentPath = getCurrentPath();
   // The Work intro already has a video layer; avoid stacking a second full-screen canvas there.
-  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/work";
+  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/work" && currentPath !== "/contact";
 
   return (
     <>
@@ -583,17 +583,20 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
       <span className="work-card__spotlight" aria-hidden="true" />
       <span className="work-card__copy">
         <strong>{project.title}</strong>
-        <small lang="en">{project.titleEn}</small>
-        <em>{categoryOptions.find((option) => option.id === project.category)?.label} · {project.year} · {project.role}</em>
+        <small>{project.role}</small>
+        <span className="work-card__details">
+          <i lang="en">{project.titleEn}</i>
+          <em>{categoryOptions.find((option) => option.id === project.category)?.label} · {project.year} · {project.client}</em>
+        </span>
       </span>
       <span className="work-card__action">查看作品 <i>{previewVideo && canHoverPreview ? "悬停预览 4 秒" : "查看静帧"}</i></span>
     </a>
   );
 }
 
-function WorkGrid({ items = projects }: { items?: Project[] }) {
+function WorkGrid({ items = projects, variant = "" }: { items?: Project[]; variant?: "editorial" | "" }) {
   return (
-    <div className="work-grid">
+    <div className={`work-grid${variant ? ` work-grid--${variant}` : ""}`}>
       {items.map((project, index) => <WorkCard key={project.slug} project={project} index={index} />)}
     </div>
   );
@@ -614,6 +617,7 @@ const profileBehindScenes = [
 const heroReelVideos: ProjectVideo[] = Array.from(
   new Map(
     projects
+      .filter((project) => !["interview", "short-form", "music"].includes(project.category))
       .flatMap((project) => project.videos ?? [])
       .filter((video) => video.src.startsWith("videos/"))
       .map((video) => [video.src, video]),
@@ -793,7 +797,7 @@ function Home() {
         <ProfileGallery />
         <div className="home-profile__body">
           <Eyebrow>个人经历 / Profile</Eyebrow>
-          <SplitText as="h2" id="profile-title" text={"让每一个镜头\n都有明确的呼吸。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <h2 id="profile-title">让每一个镜头，<br />都有明确的呼吸。</h2>
           <p>林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于产品影像、品牌短片与人物内容，从前期策划、分镜到现场摄影，建立完整而高效的视觉工作流程。</p>
           <div className="home-profile__facts">
             <div><strong>8+</strong><span>年影像经验<br /><i>Years in image-making</i></span></div>
@@ -810,9 +814,9 @@ function Home() {
       <section className="section section--work home-selected" id="selected-projects" aria-labelledby="selected-work">
         <div className="section-heading">
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
-          <SplitText as="h2" id="selected-work" text={"画面服务产品，\n影像传播品牌。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <h2 id="selected-work">画面服务产品，<br />影像传播品牌。</h2>
         </div>
-        <WorkGrid items={orderedProjects.slice(0, 6)} />
+        <WorkGrid items={orderedProjects.slice(0, 6)} variant="editorial" />
         <a className="text-link section-link" href={path("work/")}>
           查看全部 {projects.length} 组作品 <span aria-hidden="true">↘</span>
         </a>
@@ -821,13 +825,13 @@ function Home() {
       <section className="section home-capabilities" aria-labelledby="capabilities-title">
         <div className="section-heading">
           <Eyebrow>个人评价 / Capabilities</Eyebrow>
-          <SplitText as="h2" id="capabilities-title" text={"我如何把想法\n变成画面。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <h2 id="capabilities-title">我如何把想法，<br />变成画面。</h2>
         </div>
         <div className="capability-grid">
           {capabilityCards.map((card) => (
             <article className="capability-card" key={card.index}>
               <span className="capability-card__index">{card.index}</span>
-              <SplitText as="h3" text={card.title} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+              <h3>{card.title}</h3>
               <small lang="en">{card.titleEn}</small>
               <p>{card.text}</p>
             </article>
@@ -838,7 +842,7 @@ function Home() {
       <section className="home-contact" id="contact" aria-labelledby="home-contact-title">
         <div className="home-contact__inner">
           <Eyebrow>保持联系 / Contact</Eyebrow>
-          <SplitText as="h2" id="home-contact-title" text={"从下一帧开始，\n保持联系。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <h2 id="home-contact-title">从下一帧开始，<br />保持联系。</h2>
           <div className="home-contact__bottom">
             <div>
               <a href="mailto:987622735@qq.com">987622735@qq.com</a>
@@ -1020,7 +1024,7 @@ function ProjectPage({ project }: { project: Project }) {
         <div className="project__heading">
           <a className="back-link" href={path("work/")}><span aria-hidden="true">←</span> 返回作品列表</a>
           <Eyebrow>{project.year} · {project.type}</Eyebrow>
-          <SplitText as="h1" text={project.title} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <h1>{project.title}</h1>
           <p className="project__title-en" lang="en">{project.titleEn}</p>
           <p>{project.description}</p>
         </div>
@@ -1131,11 +1135,16 @@ function About() {
         </figure>
         <div>
           <Eyebrow>02 — 关于 / About</Eyebrow>
-          <SplitText as="h1" text={"用画面，\n承载感受。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <h1>用画面，<br />承载感受。</h1>
           <p className="about-hero__intro">林键明 JIMMY，现居广东深圳，拥有 8 年广告 TVC 影像创作与制作经验。长期专注于以光影、构图和镜头语言服务品牌叙事与产品表达，项目覆盖健身器械、小家电、专业摄影器材配件、OPPO、农夫山泉、美的，以及 3C 数码与母婴电商产品等领域。</p>
           <p className="about-hero__intro about-hero__intro--secondary">熟悉 ARRI Alexa、RED 等数字电影摄影机与灯光设计；重视团队协作和现场效率，在技术与美学之间寻找恰当平衡。</p>
         </div>
       </section>
+
+      <figure className="about-hero__wide-still">
+        <img src={asset("hero-on-set.jpg")} alt="林键明在现场进行移动拍摄" loading="lazy" decoding="async" />
+        <figcaption>现场工作 / Behind the scenes</figcaption>
+      </figure>
 
       <section className="about-section about-section--experience">
         <Eyebrow>工作经历 / Experience</Eyebrow>
@@ -1144,7 +1153,7 @@ function About() {
             <article key={`${item.time}-${item.company}`}>
               <p>{item.time}</p>
               <div>
-                <SplitText as="h2" text={item.title} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+                <h2>{item.title}</h2>
                 <p>{item.company}</p>
                 <ul>{item.items.map((detail) => <li key={detail}>{detail}</li>)}</ul>
               </div>
@@ -1185,7 +1194,7 @@ function Contact() {
     <Layout>
       <section className="contact">
         <Eyebrow>03 — 联系 / Contact</Eyebrow>
-        <SplitText as="h1" text={"保持联系，\n从画面开始。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <h1>保持联系，<br />从画面开始。</h1>
         <div className="contact__links">
           <a href="mailto:987622735@qq.com"><span>邮箱 <i>Email</i></span>987622735@qq.com</a>
           <a href="tel:+8615918606378"><span>电话 <i>Phone</i></span>+86 159 1860 6378</a>
@@ -1210,7 +1219,7 @@ function NotFound() {
     <Layout>
       <section className="not-found">
         <Eyebrow>404</Eyebrow>
-        <SplitText as="h1" text={"这个画面\n暂未收录。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <h1>这个画面<br />暂未收录。</h1>
         <a className="text-link" href={path()}>返回首页 <span aria-hidden="true">↗</span></a>
       </section>
     </Layout>
