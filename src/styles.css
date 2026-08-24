@@ -57,9 +57,12 @@ button, input { font: inherit; }
 .section-link { margin-top: 2.75rem; }
 
 .work-grid { display: grid; grid-template-columns: 1fr; gap: 1px; overflow: hidden; background: #292927; }
-.work-card { position: relative; min-height: 69vw; overflow: hidden; background: #181817; }
-.work-card img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.83); transition: transform .75s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
+.work-card { --spotlight-x: 50%; --spotlight-y: 50%; position: relative; min-height: 69vw; overflow: hidden; background: #181817; isolation: isolate; }
+.work-card__image, .work-card__preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.83); transition: transform .75s cubic-bezier(.2,.7,.2,1), filter .5s ease, opacity .35s ease; }
+.work-card__preview { z-index: 1; opacity: 0; pointer-events: none; }
 .work-card__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(0 0 0 / .02) 30%, rgb(0 0 0 / .7) 100%); transition: background .45s ease; }
+.work-card__spotlight { position: absolute; z-index: 2; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(circle 450px at var(--spotlight-x) var(--spotlight-y), rgb(124 255 103 / .2), transparent 58%); transition: opacity .35s ease; mix-blend-mode: screen; }
+.work-card::after { position: absolute; z-index: 3; inset: .6rem; border: 1px solid transparent; border-radius: .35rem; content: ""; pointer-events: none; transition: border-color .35s ease, box-shadow .35s ease; }
 .work-card__copy { position: absolute; right: 1rem; bottom: 1rem; left: 1rem; color: #fff; text-shadow: 0 1px 18px rgb(0 0 0 / .5); }
 .work-card__copy strong { display: block; max-width: 15ch; font-size: clamp(1.35rem, 2.3vw, 2rem); font-weight: 500; letter-spacing: -.055em; line-height: 1.02; }
 .work-card__copy small { display: block; margin-top: .45rem; color: #d6d5d0; font-family: "SFMono-Regular", Consolas, monospace; font-size: .55rem; letter-spacing: .04em; line-height: 1.55; }
@@ -156,9 +159,12 @@ button, input { font: inherit; }
 @media (hover: hover) and (pointer: fine) {
   .work-card__veil { background: linear-gradient(180deg, rgb(0 0 0 / .02) 30%, rgb(0 0 0 / .62) 100%); }
   .work-card__copy { transition: transform .4s ease; }
-  .work-card:hover img, .work-card:focus-visible img { transform: scale(1.045); filter: saturate(1); }
+  .work-card:hover .work-card__image, .work-card:focus-visible .work-card__image { transform: scale(1.045); filter: saturate(1); }
+  .work-card:hover .work-card__preview, .work-card:focus-visible .work-card__preview { opacity: 1; }
   .work-card:hover .work-card__veil, .work-card:focus-visible .work-card__veil { background: linear-gradient(180deg, rgb(0 0 0 / .12) 25%, rgb(0 0 0 / .74) 100%); }
   .work-card:hover .work-card__copy, .work-card:focus-visible .work-card__copy { transform: translateY(-.35rem); }
+  .work-card:hover .work-card__spotlight, .work-card:focus-visible .work-card__spotlight { opacity: 1; }
+  .work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(228 196 91 / .8); box-shadow: 0 0 0 1px rgb(124 255 103 / .15), 0 0 30px rgb(124 255 103 / .18); }
 }
 
 @media (min-width: 720px) {
@@ -171,7 +177,6 @@ button, input { font: inherit; }
   .section-heading { grid-template-columns: .55fr 1.45fr; align-items: start; }
   .work-grid { grid-template-columns: repeat(2, 1fr); }
   .work-card { min-height: 38vw; }
-  .work-card--1 { grid-row: span 2; min-height: 76vw; }
   .statement { min-height: 65vh; padding: 10rem 2rem; }
   .page-intro { padding: 11rem 2rem 6rem; }
   .project { padding: 11rem 2rem 9rem; }
@@ -201,9 +206,9 @@ button, input { font: inherit; }
   .section { padding: 11rem 3rem; }
   .work-grid { grid-template-columns: repeat(3, 1fr); }
   .work-card { min-height: 28vw; }
-  .work-card--1 { min-height: 56vw; }
+  .work-card { min-height: 30vw; }
   .section--work-page .work-card { min-height: 27vw; }
-  .section--work-page .work-card--1 { min-height: 54vw; }
+  .section--work-page .work-card { min-height: 27vw; }
   .statement { padding: 13rem 3rem; }
   .page-intro { padding: 13rem 3rem 7rem; }
   .project { padding: 13rem 3rem 11rem; }
