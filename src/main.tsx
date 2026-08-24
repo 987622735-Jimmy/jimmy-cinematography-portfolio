@@ -680,7 +680,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   const poster = video?.poster ? asset(video.poster) : asset(project.images[0]);
   const title = video?.title ?? `${project.title} 影片`;
   const titleEn = video?.titleEn ?? "Film";
-  const videoShapeClass = project.slug === "nongfu" || project.slug === "oppo" ? " project-video--vertical" : "";
+  const videoShapeClass = ["nongfu", "oppo", "midea"].includes(project.slug) ? " project-video--vertical" : "";
 
   if (!source) {
     return (
