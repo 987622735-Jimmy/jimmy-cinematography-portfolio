@@ -119,6 +119,10 @@ export const projects: Project[] = [
     cinematographer: "—",
     camera: "—",
     lenses: "—",
+    videos: [
+      { src: "videos/asus-smallrig-creative.mp4", poster: "collection/image22.jpg", title: "高手过招｜SmallRig × ASUS 华硕无畏", titleEn: "SmallRig × ASUS — Creative Power" },
+      { src: "videos/asus-proart-creative.mp4", poster: "collection/image23.jpg", title: "创作无界｜ASUS ProArt 创作生态", titleEn: "ASUS ProArt — Boundless Creation" },
+    ],
   },
   {
     slug: "mamazing",
