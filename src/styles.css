@@ -317,6 +317,7 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 .home-profile > :not(.home-profile__bends) { position: relative; z-index: 1; }
 .home-profile__bends { position: absolute; z-index: 0; inset: 0; overflow: hidden; opacity: .52; pointer-events: none; }
 .color-bends { display: block; width: 100%; height: 100%; }
+.color-bends--static { background: radial-gradient(ellipse at 70% 30%, rgb(124 255 103 / .16), transparent 48%), radial-gradient(ellipse at 28% 75%, rgb(213 132 0 / .12), transparent 52%), linear-gradient(135deg, #061a12 0%, #0b2b20 48%, #061a12 100%); }
 .home-profile__bends-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(6 26 18 / .92) 0%, rgb(6 26 18 / .68) 48%, rgb(6 26 18 / .9) 100%); }
 .home-profile__visual { position: relative; align-self: start; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 1rem; background: #101d17; }
 .home-profile__visual img { position: absolute; inset: 0; height: 100%; object-fit: cover; filter: saturate(.7) contrast(1.08); opacity: 0; transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform 6s cubic-bezier(.2,.7,.2,1), filter .6s ease; }
@@ -382,6 +383,11 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
   .pill-nav__pill { gap: 0; padding: .58rem .56rem; font-size: .63rem; }
   .pill-nav__pill small { display: none; }
   .site-header--floating { padding: .55rem .6rem; }
+  .pill-nav { backdrop-filter: blur(10px) saturate(115%); -webkit-backdrop-filter: blur(10px) saturate(115%); }
+  .site-header--floating .pill-nav { box-shadow: 0 .55rem 1.5rem rgb(0 0 0 / .2); }
+  .page-backdrop { opacity: .32; }
+  .home-profile__bends { opacity: .34; }
+  .work-card__spotlight { display: none; }
   .hero__statement { max-width: 22rem; }
   .home-profile__facts { gap: 1.25rem; }
   .home-profile__facts div { gap: .45rem; }
