@@ -95,8 +95,9 @@ button, input { font: inherit; }
 .project__heading h1 { max-width: 12ch; margin: 1.1rem 0 1.5rem; font-size: clamp(3.1rem, 9vw, 9rem); font-weight: 500; letter-spacing: -.08em; line-height: .88; }
 .project__title-en { margin: -1rem 0 1.6rem !important; color: #aaa8a1 !important; font-family: "SFMono-Regular", Consolas, monospace; font-size: .68rem; letter-spacing: .06em; }
 .project__heading > p { max-width: 43rem; margin: 0; color: #bbb9b2; line-height: 1.75; }
-.project__lead-image { margin: 0; background: #20201e; }
-.project__lead-image img { max-height: 91vh; object-fit: contain; }
+.project__lead-image { position: relative; isolation: isolate; overflow: hidden; margin: 0; background: #20201e; }
+.project__lead-image::before, .project-video--poster::before, .project-video--local::before { position: absolute; z-index: 0; inset: -8%; background: var(--frame-bg) center / cover no-repeat; filter: blur(24px) saturate(.78) brightness(.7); transform: scale(1.08); opacity: .86; content: ""; }
+.project__lead-image img { position: relative; z-index: 1; max-height: 91vh; object-fit: contain; }
 .project-video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 4rem 0 0; background: #1a1a18; }
 .project-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .project-films { margin-top: 4rem; }
@@ -104,17 +105,17 @@ button, input { font: inherit; }
 .project-films__heading p { margin: 0; color: #999790; font-size: .78rem; }
 .project-films__grid { display: grid; gap: 1rem; }
 .project-films .project-video { margin: 0; }
-.project-video--poster { display: grid; place-items: center; overflow: hidden; border: 0; padding: 0; color: #fff; cursor: pointer; }
-.project-video--poster img { position: absolute; inset: 0; height: 100%; object-fit: cover; filter: brightness(.52) saturate(.75); transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .35s ease, opacity .25s ease; }
+.project-video--poster { display: grid; place-items: center; isolation: isolate; overflow: hidden; border: 0; padding: 0; color: #fff; cursor: pointer; }
+.project-video--poster img { position: absolute; z-index: 1; inset: 0; height: 100%; object-fit: cover; filter: brightness(.52) saturate(.75); transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .35s ease, opacity .25s ease; }
 .project-video--poster .project-video__preview { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #090909; }
 .project-video--poster.is-previewing .project-video__poster-image { opacity: 0; }
-.project-video--poster span { position: relative; z-index: 1; border-bottom: 1px solid currentColor; padding-bottom: .4rem; font-family: "SFMono-Regular", Consolas, monospace; font-size: .64rem; letter-spacing: .06em; }
+.project-video--poster span { position: relative; z-index: 2; border-bottom: 1px solid currentColor; padding-bottom: .4rem; font-family: "SFMono-Regular", Consolas, monospace; font-size: .64rem; letter-spacing: .06em; }
 .project-video--poster i { margin-left: .35rem; color: #deddd8; font-style: normal; font-size: .86em; }
 .project-video--poster:hover img { transform: scale(1.035); filter: brightness(.4) saturate(.9); }
 .project-video--external span { border-color: var(--yellow); color: var(--yellow); }
 .project-video--external i { color: var(--yellow-soft); }
-.project-video--local { overflow: hidden; }
-.project-video--local video { display: block; width: 100%; height: 100%; object-fit: contain; background: #090909; }
+.project-video--local { isolation: isolate; overflow: hidden; }
+.project-video--local video { position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: contain; background: transparent; }
 .project-video--vertical { aspect-ratio: 9 / 16; }
 .project-video__caption { margin: .65rem 0 0; color: #aaa8a1; font-size: .75rem; }
 .project-video__caption span { margin-left: .45rem; color: #77756f; font-family: "SFMono-Regular", Consolas, monospace; font-size: .65rem; }
@@ -425,7 +426,7 @@ main, .site-footer { position: relative; z-index: 1; }
 /* Project film walls stay compact on desktop while preserving each frame. */
 .project-films--compact .project-films__grid { grid-template-columns: 1fr; gap: .5rem; }
 .project-films--compact .project-video { aspect-ratio: 4 / 3; min-width: 0; }
-.project-films--compact .project-video--poster img { object-fit: contain; background: #090909; }
+.project-films--compact .project-video--poster img { object-fit: contain; background: transparent; }
 
 @media (min-width: 720px) {
   .project-films--compact .project-films__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .625rem; }
