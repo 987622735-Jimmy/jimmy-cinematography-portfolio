@@ -29,9 +29,9 @@ export const categoryOptions = [
   { id: "all", label: "全部", labelEn: "All" },
   { id: "fitness", label: "健身类", labelEn: "Fitness" },
   { id: "appliances", label: "小家电", labelEn: "Home Appliances" },
-  { id: "digital", label: "3C 数码", labelEn: "Digital" },
+  { id: "camera", label: "摄影配件类", labelEn: "Camera Gear" },
   { id: "baby", label: "母婴类", labelEn: "Family" },
-  { id: "camera", label: "摄影配件", labelEn: "Camera Gear" },
+  { id: "digital", label: "3C 数码类", labelEn: "Digital" },
   { id: "interview", label: "采访", labelEn: "Interview" },
   { id: "short-form", label: "短视频类", labelEn: "Short Form" },
 ] as const;
@@ -59,7 +59,6 @@ export const projects: Project[] = [
     lenses: "—",
     videos: [
       { src: "videos/appliances-vacuum-0308.mp4", poster: "videos/posters/appliances-vacuum-0308.jpg", title: "0308 吸尘器｜电机渲染", titleEn: "Vacuum Motor Film" },
-      { src: "videos/appliances-500001.mp4", poster: "videos/posters/appliances-500001.jpg", title: "小家电产品片", titleEn: "Home Appliance Film" },
       { src: "videos/appliances-de-a10.mp4", poster: "videos/posters/appliances-de-a10.jpg", title: "DE-A10 吸尘器", titleEn: "DE-A10 Vacuum" },
       { src: "videos/appliances-curl-en.mp4", poster: "videos/posters/appliances-curl-en.jpg", title: "卷发器｜美规", titleEn: "Curling Iron — US" },
       { src: "videos/appliances-snow-melt.mp4", poster: "videos/posters/appliances-snow-melt.jpg", title: "雪融机", titleEn: "Snow Melt Machine" },
@@ -220,6 +219,7 @@ export const projects: Project[] = [
       { src: "videos/smallrig-follow-focus.mp4", poster: "videos/posters/smallrig-follow-focus.jpg", title: "Follow Focus 手柄套件", titleEn: "Follow Focus Handle Kit" },
       { src: "videos/smallrig-videoplayback.mp4", poster: "videos/posters/smallrig-videoplayback.jpg", title: "摄影配件短片", titleEn: "Camera Accessory Film" },
       { src: "videos/smallrig-innovation-button.mp4", poster: "videos/posters/smallrig-innovation-button.jpg", title: "创新拍拍键", titleEn: "Innovation Button" },
+      { src: "videos/appliances-500001.mp4", poster: "videos/posters/appliances-500001.jpg", title: "SmallRig 汽车影像幕后", titleEn: "SmallRig Car Film BTS" },
     ],
   },
   {
