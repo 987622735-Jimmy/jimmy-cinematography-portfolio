@@ -350,6 +350,7 @@ function ColorBends({
     let documentVisible = document.visibilityState === "visible";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const compactViewport = window.matchMedia("(max-width: 720px)");
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
     const pointer = { x: 0.5, y: 0.5 };
 
     const resize = () => {
@@ -461,7 +462,7 @@ function ColorBends({
       }
     };
     document.addEventListener("visibilitychange", onDocumentVisibility);
-    window.addEventListener("pointermove", updatePointer, { passive: true });
+    if (finePointer) window.addEventListener("pointermove", updatePointer, { passive: true });
     draw(performance.now());
 
     return () => {
@@ -469,7 +470,7 @@ function ColorBends({
       observer.disconnect();
       visibilityObserver.disconnect();
       document.removeEventListener("visibilitychange", onDocumentVisibility);
-      window.removeEventListener("pointermove", updatePointer);
+      if (finePointer) window.removeEventListener("pointermove", updatePointer);
     };
   }, [autoRotate, colors, frequency, mouseInfluence, noise, parallax, rotation, scale, speed, transparent, warpStrength]);
 
