@@ -661,6 +661,7 @@ function HeroReel() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const activeVideo = heroReelVideos[activeIndex % heroReelVideos.length];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const compactViewport = window.matchMedia("(max-width: 720px)").matches;
   const saveData = "connection" in navigator
     && Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
 
@@ -694,7 +695,7 @@ function HeroReel() {
 
   if (!activeVideo) return null;
 
-  if (reducedMotion || saveData) {
+  if (reducedMotion || compactViewport || saveData) {
     return <img className="hero__video hero__video--poster" src={media(activeVideo.poster)} alt="" aria-hidden="true" />;
   }
 
