@@ -158,9 +158,12 @@ function Footer() {
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const hasPageBackdrop = getCurrentPath() !== "/";
+
   return (
     <>
       <a className="skip-link" href="#content">跳至正文</a>
+      {hasPageBackdrop && <PageBackdrop />}
       <Header />
       <main id="content">{children}</main>
       <Footer />
@@ -425,6 +428,27 @@ function ColorBends({
   return <canvas ref={canvasRef} className="color-bends" aria-hidden="true" />;
 }
 
+function PageBackdrop() {
+  return (
+    <div className="page-backdrop" aria-hidden="true">
+      <ColorBends
+        rotation={75}
+        speed={0.15}
+        colors={["#7cff67", "#d58400", "#b51a00"]}
+        transparent
+        autoRotate={1}
+        scale={2}
+        frequency={1}
+        warpStrength={1}
+        mouseInfluence={0.7}
+        parallax={0.6}
+        noise={0.15}
+      />
+      <span className="page-backdrop__shade" />
+    </div>
+  );
+}
+
 function WorkCard({ project, index }: { project: Project; index: number }) {
   const [previewing, setPreviewing] = useState(false);
   const previewVideo = project.videos?.find((video) => video.src.startsWith("videos/"));
@@ -549,6 +573,34 @@ function ProfileGallery() {
         />
       ))}
       <span>Profile / 02</span>
+      <small aria-live="polite">{String(activeIndex + 1).padStart(2, "0")} / {String(profileBehindScenes.length).padStart(2, "0")}</small>
+    </div>
+  );
+}
+
+function AboutBehindScenesGallery() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % profileBehindScenes.length);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="about-hero__gallery" role="img" aria-label="林键明拍摄现场花絮轮播">
+      {profileBehindScenes.map((image, index) => (
+        <img
+          className={index === activeIndex ? "is-active" : ""}
+          src={asset(image.src)}
+          alt={image.alt}
+          key={image.src}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+        />
+      ))}
+      <span>On set / 02</span>
       <small aria-live="polite">{String(activeIndex + 1).padStart(2, "0")} / {String(profileBehindScenes.length).padStart(2, "0")}</small>
     </div>
   );
@@ -724,7 +776,11 @@ function Work() {
   );
   return (
     <Layout>
-      <section className="page-intro">
+      <section className="page-intro page-intro--video">
+        <div className="page-intro__backdrop" aria-hidden="true">
+          <HeroReel />
+          <span className="page-intro__shade" />
+        </div>
         <Eyebrow>01 — 作品 / Work</Eyebrow>
         <SplitText as="h1" text={"从静帧开始，\n进入完整画面。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         <p>按创作方向浏览作品。每个项目先以静帧呈现，进入详情页即可观看对应影片。</p>
@@ -965,7 +1021,7 @@ function About() {
     <Layout>
       <section className="about-hero">
         <figure>
-          <img src={asset("on-set.jpg")} alt="林键明所在的商业拍摄现场" fetchPriority="high" decoding="async" sizes="(max-width: 900px) 100vw, 45vw" />
+          <AboutBehindScenesGallery />
           <figcaption>拍摄现场 / On set</figcaption>
         </figure>
         <div>
