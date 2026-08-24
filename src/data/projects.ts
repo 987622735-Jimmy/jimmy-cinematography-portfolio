@@ -72,7 +72,7 @@ export const projects: Project[] = [
     category: "fitness",
     client: "MERACH 麦瑞克",
     type: "TVC / 产品广告",
-    role: "编导",
+    role: "制片 / 编导",
     year: "2026",
     images: ["collection/fitness-director-01-shoes.jpg", "collection/fitness-director-02-portrait.jpg", "collection/fitness-director-03-room.jpg", "collection/fitness-director-04-treadmill.jpg", "collection/fitness-director-05-motion.jpg", "collection/fitness-director-06-rain.jpg", "collection/image11.jpg", "collection/image12.jpg", "collection/image13.jpg", "collection/image14.jpg", "collection/image15.jpg", "collection/image16.jpg", "collection/image17.jpg"],
     description: "以居家晨光、人物节奏与器材细节组织画面，让训练场景既具生活感，也清晰传达产品的使用体验。",
@@ -407,4 +407,3 @@ const categoryRank = new Map(categoryOptions.map((category, index) => [category.
 export const orderedProjects = [...projects].sort((a, b) =>
   (categoryRank.get(a.category) ?? Number.MAX_SAFE_INTEGER) - (categoryRank.get(b.category) ?? Number.MAX_SAFE_INTEGER),
 );
-

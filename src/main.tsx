@@ -884,7 +884,7 @@ function Work() {
           ))}
         </div>
         <p className="category-filter__count">{visibleProjects.length} 组作品 / {visibleProjects.length} projects</p>
-        <WorkGrid items={visibleProjects} />
+        <WorkGrid items={visibleProjects} covers={homeCoverImages} />
       </section>
     </Layout>
   );
