@@ -512,6 +512,41 @@ const capabilityCards = [
   { index: "04", title: "产品叙事", titleEn: "Product Storytelling", text: "把复杂功能转译成清晰、张扬、具有记忆点的画面。" },
 ];
 
+const profileBehindScenes = [
+  { src: "on-set.jpg", alt: "美术空间内的摄制团队" },
+  { src: "hero-on-set.jpg", alt: "街头移动拍摄现场" },
+  { src: "collection/image19.jpg", alt: "灯光与现场执行" },
+  { src: "collection/image21.jpg", alt: "外景拍摄现场" },
+];
+
+function ProfileGallery() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % profileBehindScenes.length);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="home-profile__visual" role="img" aria-label="林键明拍摄现场花絮">
+      {profileBehindScenes.map((image, index) => (
+        <img
+          className={index === activeIndex ? "is-active" : ""}
+          src={asset(image.src)}
+          alt={image.alt}
+          key={image.src}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+        />
+      ))}
+      <span>Profile / 02</span>
+      <small aria-live="polite">{String(activeIndex + 1).padStart(2, "0")} / {String(profileBehindScenes.length).padStart(2, "0")}</small>
+    </div>
+  );
+}
+
 function Home() {
   useMetadata(
     "林键明 JIMMY｜导演摄影师作品集",
@@ -570,10 +605,7 @@ function Home() {
           />
           <span className="home-profile__bends-shade" />
         </div>
-        <div className="home-profile__visual">
-          <img src={asset("on-set.jpg")} alt="林键明在拍摄现场" loading="lazy" decoding="async" />
-          <span>Profile / 02</span>
-        </div>
+        <ProfileGallery />
         <div className="home-profile__body">
           <Eyebrow>个人经历 / Profile</Eyebrow>
           <SplitText as="h2" id="profile-title" text={"让每一个镜头\n都有明确的呼吸。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
@@ -803,7 +835,7 @@ function ProjectPage({ project }: { project: Project }) {
         <section className="project-films" aria-label={`${project.title} 影片`}>
           <div className="project-films__heading">
             <Eyebrow>影片 / Films</Eyebrow>
-            <p>先看静帧，再点击画面播放完整视频。</p>
+            <p>先看封面，悬停预览 4 秒，点击画面播放完整视频。</p>
           </div>
           <div className="project-films__grid">
             {project.videos?.length
@@ -965,24 +997,3 @@ function NotFound() {
       <section className="not-found">
         <Eyebrow>404</Eyebrow>
         <SplitText as="h1" text={"这个画面\n暂未收录。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
-        <a className="text-link" href={path()}>返回首页 <span aria-hidden="true">↗</span></a>
-      </section>
-    </Layout>
-  );
-}
-
-function App() {
-  const currentPath = getCurrentPath();
-  const projectMatch = currentPath.match(/^\/work\/([^/]+)/);
-  if (projectMatch) {
-    const project = projectBySlug(projectMatch[1]);
-    return project ? <ProjectPage project={project} /> : <NotFound />;
-  }
-  if (currentPath === "/work") return <Work />;
-  if (currentPath === "/about") return <About />;
-  if (currentPath === "/contact") return <Contact />;
-  if (currentPath === "/") return <Home />;
-  return <NotFound />;
-}
-
-createRoot(document.getElementById("root")!).render(<App />);
