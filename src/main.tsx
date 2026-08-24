@@ -672,7 +672,7 @@ function Home() {
       <section className="section section--work home-selected" id="selected-projects" aria-labelledby="selected-work">
         <div className="section-heading">
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
-          <SplitText as="h2" id="selected-work" text={"大画面，\n先于解释发生。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+          <SplitText as="h2" id="selected-work" text={"画面服务产品，\n影像传播品牌。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
         </div>
         <WorkGrid items={orderedProjects.slice(0, 6)} />
         <a className="text-link section-link" href={path("work/")}>
@@ -997,3 +997,71 @@ function About() {
       <section className="about-section about-columns">
         <div>
           <Eyebrow>核心能力 / Skills</Eyebrow>
+          <ul><li>广告 TVC 摄影与现场执行</li><li>光影设计、构图与镜头语言</li><li>创意策划、脚本与分镜 rundown</li><li>产品卖点提炼与视觉叙事</li><li>制作统筹、供应商与影棚管理</li></ul>
+        </div>
+        <div>
+          <Eyebrow>设备经验 / Equipment</Eyebrow>
+          <p>熟悉 ARRI Alexa、RED 等数字电影摄影机，以及商业拍摄的灯光设计与现场协同。</p>
+          <Eyebrow>所在地 / Location</Eyebrow>
+          <p>广东 · 深圳<br />Shenzhen, Guangdong, China</p>
+          <Eyebrow>教育背景 / Education</Eyebrow>
+          <p>本科</p>
+        </div>
+      </section>
+
+      <section className="resume-section">
+        <p>下载完整中文简历，了解详细经历与项目背景。</p>
+        <a className="text-link" href={`${basePath}assets/JIMMY-resume.pdf`} download>下载简历 PDF <span aria-hidden="true">↓</span></a>
+      </section>
+    </Layout>
+  );
+}
+
+function Contact() {
+  useMetadata(
+    "联系｜林键明 JIMMY",
+    "联系林键明 JIMMY，获取作品与职业资料。",
+  );
+  return (
+    <Layout>
+      <section className="contact">
+        <Eyebrow>03 — 联系 / Contact</Eyebrow>
+        <SplitText as="h1" text={"保持联系，\n从画面开始。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <div className="contact__links">
+          <a href="mailto:987622735@qq.com"><span>邮箱 <i>Email</i></span>987622735@qq.com</a>
+          <a href="tel:+8615918606378"><span>电话 <i>Phone</i></span>+86 159 1860 6378</a>
+        </div>
+        <p className="contact__note">常驻广东深圳，可通过邮箱获取完整简历与作品资料。<br /><span lang="en">Based in Shenzhen, China.</span></p>
+      </section>
+    </Layout>
+  );
+}
+
+function NotFound() {
+  useMetadata("页面未找到｜林键明 JIMMY", "林键明 JIMMY 导演摄影师作品集。");
+  return (
+    <Layout>
+      <section className="not-found">
+        <Eyebrow>404</Eyebrow>
+        <SplitText as="h1" text={"这个画面\n暂未收录。"} delay={90} duration={1.25} ease="power3.out" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" />
+        <a className="text-link" href={path()}>返回首页 <span aria-hidden="true">↗</span></a>
+      </section>
+    </Layout>
+  );
+}
+
+function App() {
+  const currentPath = getCurrentPath();
+  const projectMatch = currentPath.match(/^\/work\/([^/]+)/);
+  if (projectMatch) {
+    const project = projectBySlug(projectMatch[1]);
+    return project ? <ProjectPage project={project} /> : <NotFound />;
+  }
+  if (currentPath === "/work") return <Work />;
+  if (currentPath === "/about") return <About />;
+  if (currentPath === "/contact") return <Contact />;
+  if (currentPath === "/") return <Home />;
+  return <NotFound />;
+}
+
+createRoot(document.getElementById("root")!).render(<App />);
