@@ -917,7 +917,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
         rel="noreferrer"
         aria-label={`在 Amazon Live 播放 ${title}`}
       >
-      <img src={poster} alt={`${project.title} 视频封面`} />
+      <img\n        src={poster}\n        alt={`${project.title} 视频封面`}\n        loading="lazy"\n        decoding="async"\n      />
         <span>在 Amazon Live 播放 <i>Open video ↗</i></span>
       </a>
     );
@@ -958,7 +958,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
       onBlur={() => setPreviewing(false)}
       aria-label={`播放 ${title}`}
     >
-      <img className="project-video__poster-image" src={poster} alt="" />
+      <img\n        className="project-video__poster-image"\n        src={poster}\n        alt=""\n        loading="lazy"\n        decoding="async"\n      />
       {previewing && canPreview ? (
         <video className="project-video__preview" ref={previewRef} muted playsInline preload="metadata" aria-hidden="true">
           <source src={path(source)} type="video/mp4" />
