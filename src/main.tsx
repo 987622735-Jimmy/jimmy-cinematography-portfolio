@@ -526,10 +526,10 @@ function Home() {
           muted
           loop
           playsInline
-          poster={asset("hero-on-set.jpg")}
+          poster={asset("collection/fitness-director-01-shoes.jpg")}
           aria-hidden="true"
         >
-          <source src={path("videos/smallrig-level-up.mp4")} type="video/mp4" />
+          <source src={path("videos/fitness-director-film.mp4")} type="video/mp4" />
         </video>
         <div className="hero__shade" aria-hidden="true" />
         <div className="hero__grid" aria-hidden="true" />
