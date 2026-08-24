@@ -566,7 +566,7 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
         decoding="async"
         sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
       />
-      {previewVideo ? (
+      {previewVideo && canHoverPreview ? (
       <video
           className="work-card__preview"
           ref={previewRef}
@@ -586,7 +586,7 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
         <small lang="en">{project.titleEn}</small>
         <em>{categoryOptions.find((option) => option.id === project.category)?.label} · {project.year} · {project.role}</em>
       </span>
-      <span className="work-card__action">查看作品 <i>{previewVideo ? "悬停预览 4 秒" : "查看静帧"}</i></span>
+      <span className="work-card__action">查看作品 <i>{previewVideo && canHoverPreview ? "悬停预览 4 秒" : "查看静帧"}</i></span>
     </a>
   );
 }
