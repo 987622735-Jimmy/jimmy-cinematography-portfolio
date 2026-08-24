@@ -93,7 +93,7 @@ export const projects: Project[] = [
     category: "digital",
     client: "ASUS / 乐歌",
     type: "TVC",
-    role: "摄影",
+    role: "摄影师",
     year: "未公开",
     images: ["collection/image18.jpg", "collection/image19.jpg", "collection/image20.jpg"],
     description: "以运动、材质与色彩构成科技产品的视觉节奏，在高识别度的构图中兼顾产品细节与人物状态。",
