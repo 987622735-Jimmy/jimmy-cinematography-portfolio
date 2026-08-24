@@ -6,6 +6,7 @@ import "./styles.css";
 const basePath = import.meta.env.BASE_URL;
 const asset = (file: string) => `${basePath}images/${file}`;
 const path = (route = "") => `${basePath}${route.replace(/^\//, "")}`;
+const media = (file: string) => file.startsWith("videos/") ? path(file) : asset(file);
 
 function getCurrentPath() {
   const current = window.location.pathname;
@@ -478,7 +479,7 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
           muted
           playsInline
           preload="metadata"
-          poster={asset(previewVideo.poster)}
+          poster={media(previewVideo.poster)}
           aria-hidden="true"
         >
           <source src={path(previewVideo.src)} type="video/mp4" />
@@ -676,11 +677,31 @@ function Work() {
 
 function ProjectVideo({ project, video }: { project: Project; video?: ProjectVideo }) {
   const [playing, setPlaying] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const previewRef = useRef<HTMLVideoElement>(null);
   const source = video?.src ?? project.videoUrl;
-  const poster = video?.poster ? asset(video.poster) : asset(project.images[0]);
+  const poster = video?.poster ? media(video.poster) : asset(project.images[0]);
   const title = video?.title ?? `${project.title} 影片`;
   const titleEn = video?.titleEn ?? "Film";
   const videoShapeClass = ["nongfu", "oppo", "midea"].includes(project.slug) ? " project-video--vertical" : "";
+  const canPreview = source?.startsWith("videos/") ?? false;
+
+  useEffect(() => {
+    const preview = previewRef.current;
+    if (!preview || !previewing || playing) return undefined;
+
+    preview.currentTime = 0;
+    void preview.play().catch(() => undefined);
+    const stopPreview = window.setTimeout(() => setPreviewing(false), 4500);
+    return () => window.clearTimeout(stopPreview);
+  }, [playing, previewing]);
+
+  useEffect(() => {
+    if (!previewing && previewRef.current) {
+      previewRef.current.pause();
+      previewRef.current.currentTime = 0;
+    }
+  }, [previewing]);
 
   if (!source) {
     return (
@@ -701,7 +722,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
         rel="noreferrer"
         aria-label={`在 Amazon Live 播放 ${title}`}
       >
-        <img src={poster} alt={`${project.title} 视频封面`} />
+      <img src={poster} alt={`${project.title} 视频封面`} />
         <span>在 Amazon Live 播放 <i>Open video ↗</i></span>
       </a>
     );
@@ -733,12 +754,21 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
 
   return (
     <button
-      className={`project-video project-video--poster${videoShapeClass}`}
+      className={`project-video project-video--poster${videoShapeClass}${previewing ? " is-previewing" : ""}`}
       type="button"
-      onClick={() => setPlaying(true)}
+      onClick={() => { setPreviewing(false); setPlaying(true); }}
+      onPointerEnter={() => { if (canPreview) setPreviewing(true); }}
+      onPointerLeave={() => setPreviewing(false)}
+      onFocus={() => { if (canPreview) setPreviewing(true); }}
+      onBlur={() => setPreviewing(false)}
       aria-label={`播放 ${title}`}
     >
-      <img src={poster} alt="" />
+      <img className="project-video__poster-image" src={poster} alt="" />
+      {previewing && canPreview ? (
+        <video className="project-video__preview" ref={previewRef} muted playsInline preload="metadata" aria-hidden="true">
+          <source src={path(source)} type="video/mp4" />
+        </video>
+      ) : null}
       <span>播放影片 <i>{titleEn}</i></span>
     </button>
   );
