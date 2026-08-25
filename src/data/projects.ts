@@ -226,6 +226,7 @@ export const projects: Project[] = [
     camera: "—",
     lenses: "—",
     videos: [
+      { src: "videos/smallrig-s70-introducing.mp4", poster: "videos/posters/smallrig-s70-introducing.jpg", title: "S70 无线麦克风｜开箱介绍", titleEn: "S70 Wireless Microphone — Master Sound" },
       { src: "videos/smallrig-rt25-tube-light.mp4", poster: "videos/posters/smallrig-rt25-tube-light.jpg", title: "RT25 手持灯", titleEn: "RT25 Handheld Tube Light" },
       { src: "videos/smallrig-follow-focus.mp4", poster: "videos/posters/smallrig-follow-focus.jpg", title: "Follow Focus 手柄套件", titleEn: "Follow Focus Handle Kit" },
       { src: "videos/appliances-500001.mp4", poster: "videos/posters/appliances-500001.jpg", title: "汽车影像幕后", titleEn: "Car Film BTS" },
@@ -384,7 +385,7 @@ export const projects: Project[] = [
     type: "采访影像",
     role: "摄影",
     year: "未公开",
-    images: ["collection/image83.jpg", "collection/image84.jpg", "collection/image85.jpg", "collection/image86.jpg"],
+    images: ["videos/posters/smallrig-s70-inspiration.jpg", "collection/image83.jpg", "collection/image84.jpg", "collection/image85.jpg", "collection/image86.jpg"],
     description: "在人物、空间与光线之间寻找真实状态，以安静而有层次的画面服务采访内容的情绪与表达。",
     production: "—",
     director: "—",
@@ -392,6 +393,7 @@ export const projects: Project[] = [
     camera: "—",
     lenses: "—",
     videos: [
+      { src: "videos/smallrig-s70-inspiration.mp4", poster: "videos/posters/smallrig-s70-inspiration.jpg", title: "S70 无线麦克风｜从灵感到执行", titleEn: "S70 Wireless Microphone — From Inspiration to Execution" },
       { src: "videos/interview-international-womens-day.mp4", poster: "videos/posters/interview-international-womens-day.jpg", title: "国际妇女节人物采访", titleEn: "International Women's Day" },
       { src: "videos/interview-outer-liu.mp4", poster: "videos/posters/interview-outer-liu.jpg", title: "对话 Outer 刘佳科｜Crafted in China", titleEn: "Outer × Liu Jiake — Crafted in China" },
       { src: "videos/interview-youse-wei.mp4", poster: "videos/posters/interview-youse-wei.jpg", title: "对话有色魏民｜中国设计如何打造世界品牌", titleEn: "Yose × Wei Min — Chinese Design, Global Brands" },
