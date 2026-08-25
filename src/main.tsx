@@ -901,7 +901,7 @@ function Work() {
   );
 }
 
-function ProjectVideo({ project, video }: { project: Project; video?: ProjectVideo }) {
+function ProjectVideo({ project, video, featured = false }: { project: Project; video?: ProjectVideo; featured?: boolean }) {
   const [playing, setPlaying] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const previewRef = useRef<HTMLVideoElement>(null);
@@ -911,6 +911,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   const title = video?.title ?? `${project.title} 影片`;
   const titleEn = video?.titleEn ?? "Film";
   const videoShapeClass = ["nongfu", "oppo", "midea"].includes(project.slug) ? " project-video--vertical" : "";
+  const featuredClass = featured ? " project-video--primary" : "";
   const canPreview = source?.startsWith("videos/") ?? false;
 
   useEffect(() => {
@@ -932,7 +933,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
 
   if (!source) {
     return (
-      <section className="project-video project-video--pending" aria-label="影片播放状态">
+      <section className={`project-video project-video--pending${featuredClass}`} aria-label="影片播放状态">
         <p className="project-video__kicker">影片 / Film</p>
         <strong>当前项目先展示静帧</strong>
         <p>该项目暂未匹配到视频文件，先通过静帧了解画面方向。</p>
@@ -943,7 +944,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   if (source.startsWith("https://www.amazon.com/live/")) {
     return (
       <a
-        className="project-video project-video--poster project-video--external"
+        className={`project-video project-video--poster project-video--external${featuredClass}`}
         style={frameStyle}
         href={source}
         target="_blank"
@@ -964,7 +965,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
   if (playing) {
     if (source.startsWith("videos/")) {
       return (
-        <div className={`project-video project-video--local${videoShapeClass}`} style={frameStyle}>
+        <div className={`project-video project-video--local${videoShapeClass}${featuredClass}`} style={frameStyle}>
           <video controls autoPlay playsInline preload="metadata" poster={poster}>
             <source src={path(source)} type="video/mp4" />
             当前浏览器不支持 HTML5 视频播放。
@@ -974,7 +975,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
       );
     }
     return (
-      <div className="project-video">
+      <div className={`project-video${featuredClass}`}>
         <iframe
           src={source}
           title={title}
@@ -987,7 +988,7 @@ function ProjectVideo({ project, video }: { project: Project; video?: ProjectVid
 
   return (
     <button
-      className={`project-video project-video--poster${videoShapeClass}${previewing ? " is-previewing" : ""}`}
+      className={`project-video project-video--poster${videoShapeClass}${featuredClass}${previewing ? " is-previewing" : ""}`}
       style={frameStyle}
       type="button"
       onClick={() => { setPreviewing(false); setPlaying(true); }}
@@ -1019,6 +1020,21 @@ function ProjectPage({ project }: { project: Project }) {
     `${project.title}｜林键明 JIMMY`,
     `${project.title}：${project.description}`,
   );
+  const videos = project.videos ?? [];
+  const hasVideoGroups = videos.some((video) => Boolean(video.group));
+  const groupedVideos = hasVideoGroups
+    ? videos.reduce<Array<{ label: string; labelEn: string; items: Array<{ video: ProjectVideo; index: number }> }>>((groups, video, index) => {
+      const label = video.group ?? "影片";
+      const labelEn = video.groupEn ?? "Films";
+      const group = groups.find((item) => item.label === label && item.labelEn === labelEn);
+      if (group) group.items.push({ video, index });
+      else groups.push({ label, labelEn, items: [{ video, index }] });
+      return groups;
+    }, [])
+    : [];
+  const renderVideo = (video: ProjectVideo, index: number) => (
+    <ProjectVideo key={video.src} project={project} video={video} featured={index === 0} />
+  );
   return (
     <Layout>
       <article className="project">
@@ -1048,11 +1064,25 @@ function ProjectPage({ project }: { project: Project }) {
             <Eyebrow>影片 / Films</Eyebrow>
             <p>先看封面，悬停预览 4 秒，点击画面播放完整视频。</p>
           </div>
-          <div className="project-films__grid">
-            {project.videos?.length
-              ? project.videos.map((video) => <ProjectVideo key={video.src} project={project} video={video} />)
-              : <ProjectVideo project={project} />}
-          </div>
+          {hasVideoGroups ? (
+            <div className="project-films__groups">
+              {groupedVideos.map((group) => (
+                <section className="project-films__group" key={`${group.label}-${group.labelEn}`}>
+                  <div className="project-films__group-heading">
+                    <span>{group.label}</span>
+                    <i lang="en">{group.labelEn}</i>
+                  </div>
+                  <div className="project-films__grid">
+                    {group.items.map(({ video, index }) => renderVideo(video, index))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <div className="project-films__grid">
+              {videos.length ? videos.map((video, index) => renderVideo(video, index)) : <ProjectVideo project={project} featured />}
+            </div>
+          )}
         </section>
 
         <div className="project__meta" aria-label="作品信息">

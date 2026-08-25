@@ -23,6 +23,8 @@ export type ProjectVideo = {
   poster: string;
   title: string;
   titleEn: string;
+  group?: string;
+  groupEn?: string;
 };
 
 export const categoryOptions = [
@@ -226,10 +228,10 @@ export const projects: Project[] = [
     camera: "—",
     lenses: "—",
     videos: [
-      { src: "videos/smallrig-s70-introducing.mp4", poster: "videos/posters/smallrig-s70-introducing.jpg", title: "S70 无线麦克风｜开箱介绍", titleEn: "S70 Wireless Microphone — Master Sound" },
-      { src: "videos/smallrig-rt25-tube-light.mp4", poster: "videos/posters/smallrig-rt25-tube-light.jpg", title: "RT25 手持灯", titleEn: "RT25 Handheld Tube Light" },
-      { src: "videos/smallrig-follow-focus.mp4", poster: "videos/posters/smallrig-follow-focus.jpg", title: "Follow Focus 手柄套件", titleEn: "Follow Focus Handle Kit" },
-      { src: "videos/appliances-500001.mp4", poster: "videos/posters/appliances-500001.jpg", title: "汽车影像幕后", titleEn: "Car Film BTS" },
+      { src: "videos/smallrig-s70-introducing.mp4", poster: "videos/posters/smallrig-s70-introducing.jpg", title: "S70 无线麦克风｜开箱介绍", titleEn: "S70 Wireless Microphone — Master Sound", group: "音频", groupEn: "Audio" },
+      { src: "videos/smallrig-rt25-tube-light.mp4", poster: "videos/posters/smallrig-rt25-tube-light.jpg", title: "RT25 手持灯", titleEn: "RT25 Handheld Tube Light", group: "灯光", groupEn: "Lighting" },
+      { src: "videos/smallrig-follow-focus.mp4", poster: "videos/posters/smallrig-follow-focus.jpg", title: "Follow Focus 手柄套件", titleEn: "Follow Focus Handle Kit", group: "摄影配件", groupEn: "Camera Accessories" },
+      { src: "videos/appliances-500001.mp4", poster: "videos/posters/appliances-500001.jpg", title: "汽车影像幕后", titleEn: "Car Film BTS", group: "摄影配件", groupEn: "Camera Accessories" },
     ],
   },
   {
