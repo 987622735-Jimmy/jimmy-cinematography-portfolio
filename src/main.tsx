@@ -506,7 +506,9 @@ function PageBackdrop() {
   );
 }
 
-function WorkCard({ project, index, cover }: { project: Project; index: number; cover?: string }) {
+type WorkFrame = "wide" | "standard" | "portrait";
+
+function WorkCard({ project, index, cover, frame }: { project: Project; index: number; cover?: string; frame?: WorkFrame }) {
   const [previewing, setPreviewing] = useState(false);
   const previewVideo = project.videos?.find((video) => video.src.startsWith("videos/"));
   const previewRef = useRef<HTMLVideoElement>(null);
@@ -531,7 +533,7 @@ function WorkCard({ project, index, cover }: { project: Project; index: number; 
 
   return (
     <a
-      className={`work-card work-card--${(index % 3) + 1}`}
+      className={`work-card work-card--${(index % 3) + 1}${frame ? ` work-card--frame-${frame}` : ""}`}
       href={path(`work/${project.slug}/`)}
       key={project.slug}
       aria-label={`查看 ${project.title} 图集与影片`}
@@ -575,10 +577,10 @@ function WorkCard({ project, index, cover }: { project: Project; index: number; 
   );
 }
 
-function WorkGrid({ items = projects, variant = "", covers }: { items?: Project[]; variant?: "editorial" | ""; covers?: Record<string, string> }) {
+function WorkGrid({ items = projects, variant = "", covers, frames }: { items?: Project[]; variant?: "editorial" | ""; covers?: Record<string, string>; frames?: Record<string, WorkFrame> }) {
   return (
     <div className={`work-grid${variant ? ` work-grid--${variant}` : ""}`}>
-      {items.map((project, index) => <WorkCard key={project.slug} project={project} index={index} cover={covers?.[project.slug]} />)}
+      {items.map((project, index) => <WorkCard key={project.slug} project={project} index={index} cover={covers?.[project.slug]} frame={frames?.[project.slug]} />)}
     </div>
   );
 }
@@ -590,6 +592,15 @@ const homeCoverImages: Record<string, string> = {
   mamazing: "collection/image26.jpg",
   "asus-loctek": "collection/image19.jpg",
   asus: "collection/image23.jpg",
+};
+
+const homeCardFrames: Record<string, WorkFrame> = {
+  fitness: "wide",
+  appliances: "standard",
+  smallrig: "wide",
+  mamazing: "standard",
+  "asus-loctek": "portrait",
+  asus: "wide",
 };
 
 const capabilityCards = [
@@ -806,7 +817,7 @@ function Home() {
           <Eyebrow>精选作品 / Selected Work</Eyebrow>
           <h2 id="selected-work">画面服务产品，<br />影像传播品牌。</h2>
         </div>
-        <WorkGrid items={orderedProjects.slice(0, 6)} variant="editorial" covers={homeCoverImages} />
+        <WorkGrid items={orderedProjects.slice(0, 6)} variant="editorial" covers={homeCoverImages} frames={homeCardFrames} />
         <a className="text-link section-link" href={path("work/")}>
           查看全部 {projects.length} 组作品 <span aria-hidden="true">↘</span>
         </a>
