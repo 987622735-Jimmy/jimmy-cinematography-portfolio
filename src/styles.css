@@ -173,7 +173,7 @@ button, input { font: inherit; }
   .work-card:hover .work-card__preview, .work-card:focus-visible .work-card__preview { opacity: 1; }
   .work-card:hover .work-card__veil, .work-card:focus-visible .work-card__veil { background: linear-gradient(180deg, rgb(0 0 0 / .12) 25%, rgb(0 0 0 / .74) 100%); }
   .work-card:hover .work-card__copy, .work-card:focus-visible .work-card__copy { transform: translateY(-.35rem); }
-  .work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(228 196 91 / .8); box-shadow: none; }
+  .work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(228 196 91 / .45); box-shadow: none; }
 }
 
 @media (min-width: 720px) {
@@ -389,7 +389,7 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 .work-card__details i { color: var(--muted); font-family: "SFMono-Regular", Consolas, monospace; font-size: .5rem; font-style: normal; letter-spacing: .04em; }
 .work-card__details em { margin-top: 0; color: var(--muted); font-family: "SFMono-Regular", Consolas, monospace; font-size: .5rem; font-style: normal; line-height: 1.45; }
 .work-card__action { opacity: 0; transition: opacity .3s ease, color .3s ease; }
-.work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(242 244 236 / .42); box-shadow: none; }
+.work-card:hover::after, .work-card:focus-visible::after { border-color: rgb(228 196 91 / .45); box-shadow: none; }
 
 @media (hover: hover) and (pointer: fine) {
   .work-card:hover .work-card__details, .work-card:focus-visible .work-card__details { max-height: 4rem; margin-top: .45rem; opacity: 1; transform: translateY(0); }
@@ -426,6 +426,37 @@ h1, h2, h3, .wordmark, .hero__role, .hero__button, .header-cta { font-family: va
 
 @media (min-width: 1100px) {
   .work-grid--editorial { gap: 1rem; }
+}
+
+/* Mobile editorial rhythm: vary the frame height without fragmenting the single-column flow. */
+@media (max-width: 719px) {
+  .work-grid--editorial .work-card {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .work-grid--editorial .work-card:first-child,
+  .work-grid--editorial .work-card:nth-child(2n + 3) {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Contact closes like a quiet title card: keep the information, increase the breathing room. */
+.contact {
+  min-height: calc(100svh + 5rem);
+  padding-top: clamp(10rem, 16vh, 14rem);
+  padding-bottom: clamp(8rem, 14vh, 11rem);
+}
+
+.contact__links { margin-top: clamp(5.5rem, 9vh, 7rem); }
+.contact__note { margin-top: clamp(4rem, 8vh, 6rem); }
+
+@media (min-width: 720px) {
+  .contact {
+    min-height: calc(100svh + 6rem);
+    padding-top: clamp(13rem, 19vh, 17rem);
+    padding-bottom: clamp(9rem, 14vh, 12rem);
+  }
 }
 
 /* Final visual pass: quieter cards, more breathable Chinese display type, and a clean detail-page screening room. */
