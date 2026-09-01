@@ -396,6 +396,7 @@ export const projects: Project[] = [
     lenses: "—",
     videos: [
       { src: "videos/smallrig-s70-inspiration.mp4", poster: "videos/posters/smallrig-s70-inspiration.jpg", title: "S70 无线麦克风｜从灵感到执行", titleEn: "S70 Wireless Microphone — From Inspiration to Execution" },
+      { src: "videos/smallrig-s70-where-sound-becomes-art.mp4", poster: "videos/posters/smallrig-s70-where-sound-becomes-art.jpg", title: "S70 无线麦克风｜声音成就艺术", titleEn: "S70 Wireless Microphone — Where Sound Becomes Art" },
       { src: "videos/interview-international-womens-day.mp4", poster: "videos/posters/interview-international-womens-day.jpg", title: "国际妇女节人物采访", titleEn: "International Women's Day" },
       { src: "videos/interview-outer-liu.mp4", poster: "videos/posters/interview-outer-liu.jpg", title: "对话 Outer 刘佳科｜Crafted in China", titleEn: "Outer × Liu Jiake — Crafted in China" },
       { src: "videos/interview-youse-wei.mp4", poster: "videos/posters/interview-youse-wei.jpg", title: "对话有色魏民｜中国设计如何打造世界品牌", titleEn: "Yose × Wei Min — Chinese Design, Global Brands" },
