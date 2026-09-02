@@ -102,7 +102,7 @@ function PillNav({
   );
 }
 
-function Header() {
+function Header({ showcase = false }: { showcase?: boolean }) {
   const [floating, setFloating] = useState(false);
 
   useEffect(() => {
@@ -124,7 +124,9 @@ function Header() {
   }, []);
 
   const currentPath = getCurrentPath();
-  const activeHref = currentPath === "/"
+  const activeHref = showcase
+    ? path("showcase/")
+    : currentPath === "/"
     ? path()
     : currentPath.startsWith("/work")
       ? path("work/")
@@ -134,16 +136,25 @@ function Header() {
           ? path("contact/")
           : undefined;
 
+  const items: PillNavItem[] = showcase
+    ? [
+        { label: "首页", labelEn: "Home", href: path("showcase/") },
+        { label: "作品", labelEn: "Work", href: path("work/") },
+        { label: "联系我", labelEn: "Contact", href: path("contact/") },
+      ]
+    : [
+        { label: "首页", labelEn: "Home", href: path() },
+        { label: "作品", labelEn: "Work", href: path("work/") },
+        { label: "经历", labelEn: "About", href: path("about/") },
+        { label: "联系我", labelEn: "Contact", href: path("contact/") },
+      ];
+
   return (
     <header className={`site-header${floating ? " site-header--floating" : ""}`}>
       <PillNav
         logoAlt="林键明 JIMMY 首页"
-        items={[
-          { label: "首页", labelEn: "Home", href: path() },
-          { label: "作品", labelEn: "Work", href: path("work/") },
-          { label: "经历", labelEn: "About", href: path("about/") },
-          { label: "联系我", labelEn: "Contact", href: path("contact/") },
-        ]}
+        logoHref={showcase ? path("showcase/") : path()}
+        items={items}
         activeHref={activeHref}
         className="site-pill-nav"
         ease="power2.easeOut"
@@ -168,16 +179,16 @@ function Footer() {
   );
 }
 
-function Layout({ children }: { children: React.ReactNode }) {
+function Layout({ children, showcase = false }: { children: React.ReactNode; showcase?: boolean }) {
   const currentPath = getCurrentPath();
   // Work and Project Detail pages stay as clean dark screening rooms; only About keeps the ambient canvas.
-  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/work" && currentPath !== "/contact" && !currentPath.startsWith("/work/");
+  const hasPageBackdrop = currentPath !== "/" && currentPath !== "/showcase" && currentPath !== "/work" && currentPath !== "/contact" && !currentPath.startsWith("/work/");
 
   return (
     <>
       <a className="skip-link" href="#content">跳至正文</a>
       {hasPageBackdrop && <PageBackdrop />}
-      <Header />
+      <Header showcase={showcase} />
       <main id="content">{children}</main>
       <Footer />
     </>
@@ -746,14 +757,14 @@ function HeroReel() {
   );
 }
 
-function Home() {
+function Home({ showcase = false }: { showcase?: boolean } = {}) {
   useMetadata(
-    "林键明 JIMMY｜导演摄影师作品集",
+    showcase ? "林键明 JIMMY｜作品展示" : "林键明 JIMMY｜导演摄影师作品集",
     "林键明 JIMMY，深圳导演摄影师。以光影、构图与镜头节奏完成广告、产品与人物影像。",
   );
 
   return (
-    <Layout>
+    <Layout showcase={showcase}>
       <section className="hero">
         <HeroReel />
         <div className="hero__shade" aria-hidden="true" />
@@ -764,21 +775,21 @@ function Home() {
           <p className="hero__name" lang="en">JIMMY</p>
           <p className="hero__role">导演摄影师 <span>Director & Cinematographer</span></p>
           <p className="hero__statement">擅长以光影、构图与镜头节奏，把产品功能转化为有情绪的视觉叙事。</p>
-          <p className="hero__production">TVC 项目全流程制片能力，能够统筹预算、人员、资源与制作进度，在合理成本内保障拍摄执行与成片品质，并按节点高效推进项目落地。</p>
+          {!showcase && <p className="hero__production">TVC 项目全流程制片能力，能够统筹预算、人员、资源与制作进度，在合理成本内保障拍摄执行与成片品质，并按节点高效推进项目落地。</p>}
           <div className="hero__actions">
             <a className="hero__button" href={path("contact/")}>联系我 <span>Contact</span></a>
             <a className="text-link text-link--light" href={path("work/")}>
               浏览精选作品 <span aria-hidden="true">↘</span>
             </a>
-            <a className="text-link text-link--light" href={path("about/")}>
+            {!showcase && <a className="text-link text-link--light" href={path("about/")}>
               查看个人经历 <span aria-hidden="true">↘</span>
-            </a>
+            </a>}
           </div>
         </div>
         <p className="hero__index" aria-hidden="true">01 — {String(projects.length).padStart(2, "0")}</p>
       </section>
 
-      <section className="section home-profile" id="profile" aria-labelledby="profile-title">
+      {!showcase && <section className="section home-profile" id="profile" aria-labelledby="profile-title">
         <div className="home-profile__bends" aria-hidden="true">
           <ColorBends
             rotation={75}
@@ -810,7 +821,7 @@ function Home() {
           </div>
           <a className="text-link" href={path("about/")}>查看完整经历 <span aria-hidden="true">↘</span></a>
         </div>
-      </section>
+      </section>}
 
       <section className="section section--work home-selected" id="selected-projects" aria-labelledby="selected-work">
         <div className="section-heading">
@@ -823,7 +834,7 @@ function Home() {
         </a>
       </section>
 
-      <section className="section home-capabilities" aria-labelledby="capabilities-title">
+      {!showcase && <section className="section home-capabilities" aria-labelledby="capabilities-title">
         <div className="section-heading">
           <Eyebrow>个人评价 / Capabilities</Eyebrow>
           <h2 id="capabilities-title">我如何把想法，<br />变成画面。</h2>
@@ -838,7 +849,7 @@ function Home() {
             </article>
           ))}
         </div>
-      </section>
+      </section>}
 
       <section className="home-contact" id="contact" aria-labelledby="home-contact-title">
         <div className="home-contact__inner">
@@ -1267,6 +1278,7 @@ function App() {
   if (currentPath === "/work") return <Work />;
   if (currentPath === "/about") return <About />;
   if (currentPath === "/contact") return <Contact />;
+  if (currentPath === "/showcase") return <Home showcase />;
   if (currentPath === "/") return <Home />;
   return <NotFound />;
 }
