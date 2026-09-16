@@ -86,6 +86,7 @@ export const projects: Project[] = [
     videos: [
       { src: "videos/fitness-director-film.mp4", poster: "collection/fitness-director-01-shoes.jpg", title: "麦瑞克健身器材｜导演作品", titleEn: "MERACH Fitness Director Film" },
       { src: "videos/fitness-s36-aura.mp4", poster: "collection/fitness-director-04-treadmill.jpg", title: "S36 Aura 健身车", titleEn: "S36 Aura Exercise Bike" },
+      { src: "videos/merach-w60-user-pain-points.mp4", poster: "collection/fitness-director-03-room.jpg", title: "W60 用户痛点｜社媒创意短片", titleEn: "W60 User Pain Points — Social Creative Film" },
     ],
   },
   {
